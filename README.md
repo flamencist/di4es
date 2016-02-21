@@ -92,7 +92,7 @@ __Web browsers__
 
 * [Chrome](http://www.google.com/chrome/ "Chrome")
 * [Firefox](http://www.getfirefox.com/ "Firefox")
-* [Internet Explorer (IE9+)](http://www.microsoft.com/windows/internet-explorer/default.aspx "Internet Explorer")
+* [Internet Explorer (IE5+)](http://www.microsoft.com/windows/internet-explorer/default.aspx "Internet Explorer")
 
 __Server-side platforms__
 
