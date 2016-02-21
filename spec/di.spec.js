@@ -1,7 +1,7 @@
 'use strict';
 
-if (typeof require !== 'undefined') {
-  var di = require('../lib/di4js.js');
+if (typeof require !== 'undefined' && !di) {
+    di = require('../lib/di4js.js');
 }
 
 describe("Spec", function () {
@@ -133,7 +133,7 @@ describe("Spec", function () {
 
   it("should activate auto resolving", function () {
     di.autowired();
-    expect(di.getDefaultDependencyResolver().isAutowired).toBe(true);
+    expect(di.getDefaultDependencyResolver().isAutowired()).toBe(true);
   });
 
   it("should resolve registered type", function () {
