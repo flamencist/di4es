@@ -1,7 +1,7 @@
 var IDependencyResolver = Object.create(Object.prototype, {
 
   isAutowired: {
-    get: function () {},
+    value: function () {},
     enumerable: true
   },
 

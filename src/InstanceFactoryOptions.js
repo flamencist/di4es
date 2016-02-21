@@ -1,7 +1,7 @@
 var InstanceFactoryOptions = function (options) {
-  this.__name = null;
-  this.__type = null;
-  this.__parameters = null;
+  this.name = null;
+  this.type = null;
+  this.parameters = null;
   if (options) {
     for (var propertyName in options) {
       if (propertyName in this) {
@@ -12,14 +12,14 @@ var InstanceFactoryOptions = function (options) {
       }
     }
   }
-  Object.defineProperty(this, '__name', { enumerable: false });
-  Object.defineProperty(this, '__type', { enumerable: false });
-  Object.defineProperty(this, '__parameters', { enumerable: false });
+  Object.defineProperty(this, 'name', { enumerable: true });
+  Object.defineProperty(this, 'type', { enumerable: true });
+  Object.defineProperty(this, 'parameters', { enumerable: true });
   Object.seal(this);
 };
 
 InstanceFactoryOptions.prototype = Object.create(Object.prototype, {
-
+/*
   name: {
     get: function () {
       return this.__name;
@@ -49,7 +49,7 @@ InstanceFactoryOptions.prototype = Object.create(Object.prototype, {
     },
     enumerable: true
   },
-
+*/
   toString: {
     value: function () {
       return '[object InstanceFactoryOptions]';

@@ -11,7 +11,7 @@ var DependencyResolver = function (parent) {
   this.__property = null;
   this.__function = null;
   if (parent) {
-    this.__autowired = parent.isAutowired;
+    this.__autowired = parent.isAutowired();
   }
   Object.defineProperty(this, '__parent', { enumerable: false });
   Object.defineProperty(this, '__defaultFactory', { enumerable: false });
@@ -30,9 +30,9 @@ var DependencyResolver = function (parent) {
 DependencyResolver.prototype = Object.create(Object.prototype, {
 
   isAutowired: {
-    get: function () {
-      return this.__autowired;
-    },
+	value: function(){
+		return this.__autowired;
+	},
     enumerable: true
   },
 
@@ -732,7 +732,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
       if (!this.contains(name)) {
         throw new DependencyResolverException("Type or instance with name '" + name + "' is not registered");
       }
-      var index = context.resolving.indexOf(name);
+      var index = _.indexOf(context.resolving, name);
       if (index !== -1) {
         throw new DependencyResolverException("Can not resolve circular dependency '" + name + "'");
       }
@@ -747,7 +747,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
           instance.push(this.__resolveInstance(registration[i], context));
         }
       }
-      index = context.resolving.indexOf(name);
+      index = _.indexOf(context.resolving, name);
       if (index > -1) {
         context.resolving.splice(index, 1);
       }
@@ -855,7 +855,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             if (!args) {
               args = this.__getFunctionArguments(registration.type);
             }
-            index = args.indexOf(parameter.name);
+            index = _.indexOf(args, parameter.name);
             if (index === -1) {
               throw new DependencyResolverException("Constructor in registration '" + registration.name +
                 "' doesn't have defined parameter '" + parameter.name + "'");
@@ -973,7 +973,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
               if (!args) {
                 args = this.__getFunctionArguments(instance[func.name]);
               }
-              index = args.indexOf(parameter.name);
+              index = _.indexOf(args, parameter.name);
               if (index === -1) {
                 throw new DependencyResolverException("Function doesn't have defined parameter '" + 
                   parameter.name + "'");

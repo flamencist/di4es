@@ -1,7 +1,7 @@
 var DependencyResolverException = function (message) {
-  this.__name = 'DependencyResolverException';
-  this.__stack = null;
-  this.__message = message || "A dependency resolver exception has occurred.";
+  this.name = 'DependencyResolverException';
+  this.stack = null;
+  this.message = message || "A dependency resolver exception has occurred.";
   var lines, i, tmp;
   if ((typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Chrome') !== -1) ||
     (typeof navigator === 'undefined')) {
@@ -53,15 +53,15 @@ var DependencyResolverException = function (message) {
       this.stack = '';
     }
   }
-  Object.defineProperty(this, '__name', { enumerable: false });
-  Object.defineProperty(this, '__message', { enumerable: false });
-  Object.defineProperty(this, '__stack', { enumerable: false });
+  Object.defineProperty(this, 'name', { enumerable: true });
+  Object.defineProperty(this, 'message', { enumerable: true });
+  Object.defineProperty(this, 'stack', { enumerable: true });
   Object.seal(this);
 };
 
 DependencyResolverException.prototype = Object.create(Object.prototype, {
 
-  name: {
+/*  name: {
     get: function () {
       return this.__name;
     },
@@ -90,7 +90,7 @@ DependencyResolverException.prototype = Object.create(Object.prototype, {
     },
     enumerable: true
   },
-
+*/
   toString: {
     value: function () {
       var msg = this.name + ': ' + this.message;

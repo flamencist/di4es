@@ -19,10 +19,10 @@ Object.defineProperty(exports, 'setDefaultDependencyResolver', {
 });
 
 Object.defineProperty(exports, 'isAutowired', {
-  get: function () {
+  value: function () {
     return exports
       .getDefaultDependencyResolver()
-      .isAutowired;
+      .isAutowired();
   },
   enumerable: true
 });
@@ -224,12 +224,13 @@ Object.defineProperty(exports, 'getRegistration', {
 });
 
 Object.defineProperty(exports, 'debug', {
-  get: function () {
+  /*get: function () {
     return debug;
   },
   set: function (value) {
     debug = value;
-  },
+  },*/
+  value:debug,
   enumerable: true
 });
 
