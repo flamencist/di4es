@@ -542,6 +542,10 @@ Returns module's version.
 
 	di.version; // 1.0.0
 
+## Tests
+
+You can view the results of the DI4JS test suite [in your browser!](https://rawgit.com/flamencist/di4js/master/spec-runner-shim.html)
+
 ## License
 
 This software is distributed under the terms of the MIT License (MIT).
