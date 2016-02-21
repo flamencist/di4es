@@ -4,6 +4,9 @@
 [![devDependency Status](https://david-dm.org/gedbac/di4js/dev-status.svg)](https://david-dm.org/gedbac/di4js#info=devDependencies)
 [![Build Status](https://secure.travis-ci.org/gedbac/di4js.svg)](http://travis-ci.org/gedbac/di4js)
 
+This repository is fork of [di4js](https://david-dm.org/gedbac/di4js/). 
+Added support for old IE (IE5+) browsers.
+Getters and setters changed to functions.
 The __di4js__ module is dependency injection implementation in JavaScript.
 Dependency injection is a software design pattern that allows the removal of
 hard-coded dependencies and makes it possible to change them. __di4js__  is free
@@ -53,7 +56,7 @@ with __web browsers__ or with __node.js__.
 		* [NuGet](#nuget)
 * [API](#api)
 	* [autowired(value)](#diautowiredvalue)
-    * [isAutowired](#diisautowired)
+    * [isAutowired()](#diisautowired)
 	* [register(name)](#diregistername)
 		* [as(type)](#diastype)
 		* [instance(instance)](#diinstanceinstance)
@@ -159,14 +162,14 @@ If autowired is enabled for dependency resolver, all type's or instance's depend
 
     di.resolve('car'); // { engine: { hp: 42 } }
     
-### di.isAutowired
+### di.isAutowired()
 
 Allows to check if autowired is enabled.
 
     di
       .autowired();
       
-    di.isAutowired; // true
+    di.isAutowired(); // true
 
 ### di.register(name)
 
