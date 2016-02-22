@@ -4,6 +4,10 @@
 [![devDependency Status](https://david-dm.org/gedbac/di4js/dev-status.svg)](https://david-dm.org/gedbac/di4js#info=devDependencies)
 [![Build Status](https://secure.travis-ci.org/gedbac/di4js.svg)](http://travis-ci.org/gedbac/di4js)
 
+This repository is fork of [di4js](https://david-dm.org/gedbac/di4js/).  
+Added support for old IE (IE5+) browsers. 
+Getters and setters changed to functions.
+
 The __di4js__ module is dependency injection implementation in JavaScript.
 Dependency injection is a software design pattern that allows the removal of
 hard-coded dependencies and makes it possible to change them. __di4js__  is free
@@ -53,7 +57,7 @@ with __web browsers__ or with __node.js__.
 		* [NuGet](#nuget)
 * [API](#api)
 	* [autowired(value)](#diautowiredvalue)
-    * [isAutowired](#diisautowired)
+    * [isAutowired()](#diisautowired)
 	* [register(name)](#diregistername)
 		* [as(type)](#diastype)
 		* [instance(instance)](#diinstanceinstance)
@@ -88,7 +92,7 @@ __Web browsers__
 
 * [Chrome](http://www.google.com/chrome/ "Chrome")
 * [Firefox](http://www.getfirefox.com/ "Firefox")
-* [Internet Explorer (IE9+)](http://www.microsoft.com/windows/internet-explorer/default.aspx "Internet Explorer")
+* [Internet Explorer (IE5+)](http://www.microsoft.com/windows/internet-explorer/default.aspx "Internet Explorer")
 
 __Server-side platforms__
 
@@ -159,14 +163,14 @@ If autowired is enabled for dependency resolver, all type's or instance's depend
 
     di.resolve('car'); // { engine: { hp: 42 } }
     
-### di.isAutowired
+### di.isAutowired()
 
 Allows to check if autowired is enabled.
 
     di
       .autowired();
       
-    di.isAutowired; // true
+    di.isAutowired(); // true
 
 ### di.register(name)
 
@@ -545,6 +549,10 @@ from the second version will return the globally scoped di4js variables to those
 Returns module's version.
 
 	di.version; // 1.0.0
+
+## Tests
+
+You can view the results of the DI4JS test suite [in your browser!](https://rawgit.com/flamencist/di4js/master/spec-runner-shim.html)
 
 ## License
 
