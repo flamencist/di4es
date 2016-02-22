@@ -534,6 +534,14 @@ Sets dependency resolver to initial state. All registered types and instances ar
 
 ### di.version
 
+### di.noConflict()
+
+If for some reason two versions of di4js are loaded (which is not recommended), calling di.noConflict() 
+from the second version will return the globally scoped di4js variables to those of the first version. Worked for browser version only.
+
+	var secondDi = window.di.noConflict(); // window.di === firstDi
+
+
 Returns module's version.
 
 	di.version; // 1.0.0

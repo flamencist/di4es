@@ -39,14 +39,9 @@ module.exports = function (grunt) {
                 options: {
                     separator: os.EOL + os.EOL,
                     banner:
-                      "(function (exports) {" + os.EOL + os.EOL +
+                      "(function () {" + os.EOL + os.EOL +
                       "  'use strict';" + os.EOL + os.EOL +
-                      "  exports = exports || {};" + os.EOL + os.EOL +
-                      "  if (typeof define === 'function' && define.amd) {" + os.EOL +
-                      "    define(function(){ return exports; });" + os.EOL +
-                      "  } else {" + os.EOL +
-                      "    window.di = exports; " + os.EOL +
-                      "  }" + os.EOL + os.EOL +
+                      "  var exports = {};" + os.EOL + os.EOL +
                       "  if (!('version' in exports)) {" + os.EOL +
                       "    exports.version = '<%= pkg.version %>';" + os.EOL +
                       "  }" + os.EOL + os.EOL +
@@ -57,7 +52,9 @@ module.exports = function (grunt) {
                       os.EOL + os.EOL +
                       "	} (exports, shim.object, shim._));" +
                       os.EOL + os.EOL +
-                      "} (window.di));" +
+                      " window.di = exports;" +
+                      os.EOL + os.EOL +
+                      "} ());" +
                       os.EOL + os.EOL,
                     process: function (src, filepath) {
                         var lines = src.split(os.EOL);
@@ -67,7 +64,7 @@ module.exports = function (grunt) {
                         return lines.join(os.EOL);
                     }
                 },
-                src: src,
+                src: src.concat(['./src/noConflict.js']),
                 dest: './<%= pkg.name %>.js',
                 nonull: true
             },

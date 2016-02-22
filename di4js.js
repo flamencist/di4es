@@ -1,14 +1,8 @@
-(function (exports) {
+(function () {
 
   'use strict';
 
-  exports = exports || {};
-
-  if (typeof define === 'function' && define.amd) {
-    define(function(){ return exports; });
-  } else {
-    window.di = exports; 
-  }
+  var exports = {};
 
   if (!('version' in exports)) {
     exports.version = '1.1.3-shim';
@@ -650,9 +644,6 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
         delete object[name];
         return returnValue;
     };
-
-
-exports.shim = shim;
 
  (function(exports, Object, _){
 
@@ -2323,7 +2314,28 @@ exports.shim = shim;
 	   enumerable: true
 	 });
 
+	 var
+	 	// Map over the di in case of overwrite
+	 	_di = window.di;
+	 
+	 exports.noConflict = function () {
+	     if (window.di === exports) {
+	         window.di = _di;
+	     }
+	 
+	     return exports;
+	 };
+	 
+	 /*if (typeof define === "function" && define.amd) {
+	     define(function () { return exports; });
+	 } else {
+	     window.di = exports;
+	 }*/
+	 
+
 	} (exports, shim.object, shim._));
 
-} (window.di));
+ window.di = exports;
+
+} ());
 

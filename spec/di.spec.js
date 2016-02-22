@@ -131,6 +131,10 @@ describe("Spec", function () {
     expect(di.dispose).not.toBeUndefined();
   });
 
+  it("should have method 'noConflict'", function () {
+      expect(di.noConflict).not.toBeUndefined();
+  });
+
   it("should activate auto resolving", function () {
     di.autowired();
     expect(di.getDefaultDependencyResolver().isAutowired()).toBe(true);
@@ -377,6 +381,14 @@ describe("Spec", function () {
         .as(DieselEngine);
     var resolver = di.create();
     expect(resolver).not.toBeNull();
+  });
+
+  it("should call noConflict", function () {
+      var oldDi = di;
+      var localDi = di.noConflict();
+      expect(localDi).not.toBeUndefined();
+      expect(di).toBeUndefined();
+      di = oldDi;
   });
 
   describe("class's 'DependencyResolverException' spec", function () {

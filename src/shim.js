@@ -634,6 +634,3 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
         delete object[name];
         return returnValue;
     };
-
-
-exports.shim = shim;
