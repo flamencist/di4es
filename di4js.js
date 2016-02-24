@@ -1,3 +1,5 @@
+/* di4js (ver. 1.1.3-shim). https://github.com/flamencist/di4js */
+
 (function () {
 
   'use strict';

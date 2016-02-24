@@ -39,6 +39,7 @@ module.exports = function (grunt) {
                 options: {
                     separator: os.EOL + os.EOL,
                     banner:
+					  "/* di4js (ver. <%= pkg.version %>). https://github.com/flamencist/di4js */" + os.EOL + os.EOL +
                       "(function () {" + os.EOL + os.EOL +
                       "  'use strict';" + os.EOL + os.EOL +
                       "  var exports = {};" + os.EOL + os.EOL +
