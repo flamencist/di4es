@@ -81,6 +81,7 @@ with __web browsers__ or with __node.js__.
     * [debug](#didebug)
 	* [dispose()](#didispose)
 	* [version](#diversion)
+	* [noConflict()](#dinoconflict)
 * [License](#license)
 * [Authors](#authors)
 
