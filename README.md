@@ -1,8 +1,8 @@
 # di4js
 
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
-[![devDependency Status](https://david-dm.org/gedbac/di4js/dev-status.svg)](https://david-dm.org/gedbac/di4js#info=devDependencies)
-[![Build Status](https://secure.travis-ci.org/gedbac/di4js.svg)](http://travis-ci.org/gedbac/di4js)
+[![devDependency Status](https://david-dm.org/flamencist/di4js/dev-status.svg)](https://david-dm.org/flamencist/di4js#info=devDependencie)
+[![Build Status](https://secure.travis-ci.org/flamencist/di4js.svg)](http://travis-ci.org/flamencist/di4js)
 
 This repository is fork of [di4js](https://david-dm.org/gedbac/di4js/).  
 Added support for old IE (IE5+) browsers. 
