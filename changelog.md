@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0 (2017-02-18)
+
+- added support for old browsers (IE5+)
+- added support for es6 classes
+- no conflict method added
+
 ## 1.1.3 (2015-03-04)
 
 - Registration resolving from parent's cantainer has been fixed

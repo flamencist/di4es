@@ -1,4 +1,4 @@
-/* di4js (ver. 1.1.3-shim). https://github.com/flamencist/di4es */
+/* di4js (ver. 2.0.0). https://github.com/flamencist/di4es */
 
 (function () {
 
@@ -7,7 +7,7 @@
   var exports = {};
 
   if (!("version" in exports)) {
-    exports.version = "1.1.3-shim";
+    exports.version = "2.0.0";
   }
 
   //http://stackoverflow.com/questions/6598945/detect-if-function-is-native-to-browser
@@ -2278,4 +2278,4 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 } ());
 
 
-//# sourceMappingURL=di4js.map
+//# sourceMappingURL=di4es.map

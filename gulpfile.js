@@ -116,10 +116,6 @@ gulp.task("spec-min", function (done) {
 gulp.task("spec-node", function () {
     return gulp.src("./spec/*.spec.js")
         .pipe(jasmine());
-/*    return new Server({
-        configFile: __dirname + "/karma-node.conf.js",
-        singleRun: true
-    }, done).start();*/
 });
 gulp.task("uglify", function () {
     gulp.src("./" + pkg.name + ".js")

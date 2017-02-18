@@ -4,8 +4,7 @@ module.exports = function(config) {
     browsers:  ["PhantomJS"],
     frameworks: ["jasmine"],
     files: [
-      "di4js.min.js",
+      "di4es.min.js",
       "./spec/**/*.spec.js"
     ]
-  });
-};
+  });};

@@ -1,16 +1,17 @@
-# di4js
+# di4es
 
-[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
-[![devDependency Status](https://david-dm.org/flamencist/di4js/dev-status.svg)](https://david-dm.org/flamencist/di4js#info=devDependencie)
+[![Built with Gulp](http://img.shields.io/badge/built%20with-gulp.js-red.svg)](http://gulpjs.com/)
+[![devDependency Status](https://david-dm.org/flamencist/di4es/dev-status.svg)](https://david-dm.org/flamencist/di4es#info=devDependencie)
 [![Build Status](https://secure.travis-ci.org/flamencist/di4js.svg)](http://travis-ci.org/flamencist/di4js)
 
-This repository is fork of [di4js](https://david-dm.org/gedbac/di4js/).  
+This repository is second version of [di4js](https://david-dm.org/gedbac/di4js/).  
 Added support for old IE (IE5+) browsers. 
+Added support for es6.
 Getters and setters changed to functions.
 
-The __di4js__ module is dependency injection implementation in JavaScript.
+The __di4es__ module is dependency injection implementation in JavaScript.
 Dependency injection is a software design pattern that allows the removal of
-hard-coded dependencies and makes it possible to change them. __di4js__  is free
+hard-coded dependencies and makes it possible to change them. __di4es__  is free
 software distributed under the terms of the MIT License (MIT) and can be used
 with __web browsers__ or with __node.js__.
 
@@ -87,7 +88,7 @@ with __web browsers__ or with __node.js__.
 
 ## Supported platforms
 
-__di4js__ runs on all the following environments:
+__di4es__ runs on all the following environments:
 
 __Web browsers__
 
@@ -104,49 +105,41 @@ __Server-side platforms__
 
 ### Node.js
 
-To install __di4js__ module for Node.js, this command should be used:
+To install __di4es__ module for Node.js, this command should be used:
 
-	npm install di4js
+	npm install di4es
 
-Also __di4js__ module's loading statement should be added to main module:
+Also __di4es__ module's loading statement should be added to main module:
 
 	'use strict';
 
-	var di = require('di4js');
+	var di = require('di4es');
 
 	// Your code goes here...
 
 ### Web Browser
 
-Theare are few options to install __di4js__ to the web  browser. Module can be downloaded or can be installed using __Bower__ or __NuGet__ package manager.
+Theare are few options to install __di4es__ to the web  browser. Module can be downloaded or can be installed using __Bower__ or __NuGet__ package manager.
 
 	<!DOCTYPE HTML>
 	<html>
 	<body>
 	  <!-- Your code goes here...-->
-	  <script src="./scripts/di4js.min.js"></script>
+	  <script src="./scripts/di4es.min.js"></script>
 	</body>
 	</html>
 
-#### AMD
-
-di4js is compatible with asynchronous module definition (AMD) and it can be loaded as ordinal module.
-
-    define(['di4js'], function (di) {
-    
-    });
-
 ### Bower
 
-To install __di4js__, run the following command.
+To install __di4es__, run the following command.
 
-	bower install di4js
+	bower install di4es
 
 ### NuGet
 
-In Visual Studio __di4js__ module can be installed using NuGet extension. To install __di4js__, run the following command in the package manager console.
+In Visual Studio __di4es__ module can be installed using NuGet extension. To install __di4es__, run the following command in the package manager console.
 
-	Install-Package di4js
+	Install-Package di4es
 
 ## API
 
@@ -547,19 +540,21 @@ Returns module's version.
 
 ### di.noConflict()
 
-If for some reason two versions of di4js are loaded (which is not recommended), calling di.noConflict() 
-from the second version will return the globally scoped di4js variables to those of the first version. Worked for browser version only.
+If for some reason two versions of di4es are loaded (which is not recommended), calling di.noConflict() 
+from the second version will return the globally scoped di4es variables to those of the first version. Worked for browser version only.
 
 	var secondDi = window.di.noConflict(); // window.di === firstDi
 
 ## Tests
 
-You can view the results of the DI4JS test suite [in your browser!](https://rawgit.com/flamencist/di4js/master/spec-runner-shim.html)
+You can view the results of the __di4es__ test suite [in your browser!](https://rawgit.com/flamencist/di4es/master/spec-runner-shim.html)
 
 ## License
 
 This software is distributed under the terms of the MIT License (MIT).
 
 ## Authors
+
+Alexander Chermyanin
 
 Gediminas Backevcius / [@gedbac](https://twitter.com/gedbac)

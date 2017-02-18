@@ -1,10 +1,12 @@
 node_modules
-.grunt
 spec
 src
 .travis.yml
 bower.json
+.gitignore
+karma*.js
 /di4js.js
 /di4js.min.js
-gruntfile.js
-SpecRunner.html
+.eslintrc
+/third-party
+gulpfile.js
