@@ -5,7 +5,7 @@ module.exports = function(config) {
     frameworks: ["jasmine"],
     files: [
       "di4es.js",
-      "./spec/**/*.spec.js"
+      "./spec/di.spec.js"
     ]
   });
 };

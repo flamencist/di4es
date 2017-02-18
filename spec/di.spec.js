@@ -164,7 +164,7 @@ describe("Spec", function () {
     expect(instance).toBe(engine);
   });
 
-  it("should resolve singleton intstance", function () {
+  it("should resolve singleton instance", function () {
     di
       .register("dieselEngine")
         .as(DieselEngine)
