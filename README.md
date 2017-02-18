@@ -2,7 +2,7 @@
 
 [![Built with Gulp](http://img.shields.io/badge/built%20with-gulp.js-red.svg)](http://gulpjs.com/)
 [![devDependency Status](https://david-dm.org/flamencist/di4es/dev-status.svg)](https://david-dm.org/flamencist/di4es#info=devDependencie)
-[![Build Status](https://secure.travis-ci.org/flamencist/di4js.svg)](http://travis-ci.org/flamencist/di4js)
+[![Build Status](https://secure.travis-ci.org/flamencist/di4es.svg)](http://travis-ci.org/flamencist/di4es)
 
 This repository is second version of [di4js](https://david-dm.org/gedbac/di4js/).  
 Added support for old IE (IE5+) browsers. 

@@ -4,6 +4,7 @@ if (typeof require !== "undefined") {
     var di = require("../lib/di4es.js");
 }
 
+
 describe("Spec", function () {
 
   var DieselEngine = function () {
