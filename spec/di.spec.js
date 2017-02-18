@@ -11,7 +11,7 @@ describe("Spec", function () {
     this.hp = 0;
   };
 
-  DieselEngine.prototype.start = function () {
+  DieselEngine.start = function () {
     console.log("Diesel engine with " + this.hp + " hp has been started...");
   };
 

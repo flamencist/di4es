@@ -15,37 +15,39 @@ hard-coded dependencies and makes it possible to change them. __di4es__  is free
 software distributed under the terms of the MIT License (MIT) and can be used
 with __web browsers__ or with __node.js__.
 
-    var Car = function (engine, year) {
-      this.engine = engine;
-	  this.year = year;
-    };
-
-    Car.prototype.start = function () {
-      this.engine.start();
-    };
-
-    var DieselEngine = function () {
-      this.hp = 0;
-    };
-
-    DieselEngine.prototype.start = function () {
-      console.log("Diesel engine with " + this.hp + " hp has been started...");
-    };
-
+    class DieselEngine {
+        constructor(){
+            this.hp = 0;
+        }
+        start() {
+            console.log("Diesel engine with " + this.hp + " hp has been started...");
+        }
+    }
+    
+    class Car {
+        constructor(engine, year){
+            this.engine = engine;
+            this.year = year;
+        }
+        start() {
+            this.engine.start();
+        };
+    }
+    
     di
-      .autowired(false)
-      .register('dieselEngine')
-        .as(DieselEngine)
-        .withProperties()
-          .prop('hp').val(42);
-      .register('car')
-        .as(Car)
-        .withConstructor()
-          .param().ref('dieselEngine')
-		  .param().val(1976);
-
-    var car = di.resolve('car');
-
+        .autowired(false)
+        .register("dieselEngine")
+            .as(DieselEngine)
+            .withProperties()
+            .prop("hp").val(42)
+        .register("car")
+            .as(Car)
+            .withConstructor()
+            .param().ref("dieselEngine")
+            .param().val(1976);
+    
+    var car = di.resolve("car");
+    
     car.start(); // Diesel engine with 42 hp has been started...
 
 ## Overview

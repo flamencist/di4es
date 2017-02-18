@@ -1,7 +1,7 @@
 var DieselEngine = function () {
 };
 
-DieselEngine.prototype.start = function () {
+DieselEngine.start = function () {
   console.log("Diesel engine has been started...");
 };
 
@@ -21,7 +21,7 @@ Car.prototype.start = function () {
     this.engine.start();
   }
   console.log("Car has been started...");
-}
+};
 
 di
   .autowired(true)

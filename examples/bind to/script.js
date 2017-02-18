@@ -16,11 +16,11 @@ function Turbo() {
 
 Engine.prototype.start = function () {
     console.log("Engine has been started...");
-}
+};
 
 Engine2.prototype.start = function () {
     console.log("Engine2 has been started...");
-}
+};
 
 function Car(engine,turbo) {
     this.start = function () {
@@ -30,7 +30,7 @@ function Car(engine,turbo) {
         }
         turbo.start();
         console.log("Car has been started...");
-    }
+    };
 }
 
 function Car2(engine,turbo) {
@@ -41,7 +41,7 @@ function Car2(engine,turbo) {
         }
         turbo.start();
         console.log("Car2 has been started...");
-    }
+    };
 }
 
 di
