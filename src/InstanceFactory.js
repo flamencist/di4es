@@ -1,3 +1,4 @@
+/* global DependencyResolverException */
 var InstanceFactory = function () {
   Object.seal(this);
 };
@@ -7,12 +8,12 @@ InstanceFactory.prototype = Object.create(Object.prototype, {
   create: {
     value: function (options) {
       if (!options) {
-        throw new DependencyResolverException("Parameter 'options' is not set");
+        throw new DependencyResolverException("Parameter \"options\" is not set");
       }
-      if ('type' in options && !options.type) {
+      if ("type" in options && !options.type) {
         throw new DependencyResolverException("Factory can't create object, because type is not set");
       }
-      if (typeof options.type !== 'function') {
+      if (typeof options.type !== "function") {
         throw new DependencyResolverException("Factory can't create object, because given type is not a function");
       }
       if (options.type === Number || options.type === Date || options.type === Boolean || options.type === String ||
@@ -33,7 +34,7 @@ InstanceFactory.prototype = Object.create(Object.prototype, {
 
   toString: {
     value: function () {
-      return '[object InstanceFactory]';
+      return "[object InstanceFactory]";
     },
     enumerable: true
   }

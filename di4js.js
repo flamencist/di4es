@@ -1,20 +1,21 @@
-/* di4js (ver. 1.1.3-shim). https://github.com/flamencist/di4js */
+/* di4js (ver. 1.1.3-shim). https://github.com/flamencist/di4es */
 
 (function () {
 
-  'use strict';
+  "use strict";
 
   var exports = {};
 
-  if (!('version' in exports)) {
-    exports.version = '1.1.3-shim';
+  if (!("version" in exports)) {
+    exports.version = "1.1.3-shim";
   }
 
   //http://stackoverflow.com/questions/6598945/detect-if-function-is-native-to-browser
 var isFuncNative = function isFuncNative(f) {
-    return !!f && (typeof f).toLowerCase() === "function"  && 
-	(f === Function.prototype ||
-	/^\s*function\s*(\b[a-z$_][a-z0-9$_]*\b)*\s*\((|([a-z$_][a-z0-9$_]*)(\s*,[a-z$_][a-z0-9$_]*)*)\)\s*{\s*\[native code\]\s*}\s*$/i.test(String(f)));
+    return !!f && (typeof f).toLowerCase() === "function" &&
+        //jshint maxlen=300
+        (/^\s*function\s*(\b[a-z$_][a-z0-9$_]*\b)*\s*\((|([a-z$_][a-z0-9$_]*)(\s*,[a-z$_][a-z0-9$_]*)*)\)\s*\{\s*\[native code\]\s*}\s*$/i.test(String(f))
+        || f === Function.prototype);
 };
 
 var shim = {
@@ -22,6 +23,8 @@ var shim = {
     _: {}
 };
 
+//noinspection Eslint
+shim._.function_toString = Function.prototype.toString;
 var call = Function.call;
 
 function uncurryThis(f) {
@@ -41,7 +44,7 @@ var defineGetter;
 var defineSetter;
 var lookupGetter;
 var lookupSetter;
-var supportsAccessors = owns(prototypeOfObject, '__defineGetter__');
+var supportsAccessors = owns(prototypeOfObject, "__defineGetter__");
 if (supportsAccessors) {
     /* eslint-disable no-underscore-dangle */
     defineGetter = call.bind(prototypeOfObject.__defineGetter__);
@@ -55,102 +58,101 @@ if (supportsAccessors) {
 var to_string = prototypeOfObject.toString;
 
 var isFunction = function (val) {
-    return to_string.call(val) === '[object Function]';
-};
-var isRegex = function (val) {
-    return to_string.call(val) === '[object RegExp]';
+    return to_string.call(val) === "[object Function]";
 };
 var isArray = function isArray(obj) {
-    return to_string.call(obj) === '[object Array]';
+    return to_string.call(obj) === "[object Array]";
 };
 var isString = function isString(obj) {
-    return to_string.call(obj) === '[object String]';
+    return to_string.call(obj) === "[object String]";
 };
 var isArguments = function isArguments(value) {
     var str = to_string.call(value);
-    var isArgs = str === '[object Arguments]';
+    var isArgs = str === "[object Arguments]";
     if (!isArgs) {
         isArgs = !isArray(value) &&
-          value !== null &&
-          typeof value === 'object' &&
-          typeof value.length === 'number' &&
-          value.length >= 0 &&
-          isFunction(value.callee);
+            value !== null &&
+            typeof value === "object" &&
+            typeof value.length === "number" &&
+            value.length >= 0 &&
+            isFunction(value.callee);
     }
     return isArgs;
 };
 
 
 // http://whattheheadsaid.com/2010/10/a-safer-object-keys-compatibility-implementation
-var hasDontEnumBug = !({ 'toString': null }).propertyIsEnumerable('toString'),
-    hasProtoEnumBug = function () { }.propertyIsEnumerable('prototype'),
-    hasStringEnumBug = !owns('x', '0'),
+var hasDontEnumBug = !({"toString": null}).propertyIsEnumerable("toString"),
+    hasProtoEnumBug = function () {
+    }.propertyIsEnumerable("prototype"),
+    hasStringEnumBug = !owns("x", "0"),
     dontEnums = [
-        'toString',
-        'toLocaleString',
-        'valueOf',
-        'hasOwnProperty',
-        'isPrototypeOf',
-        'propertyIsEnumerable',
-        'constructor'
+        "toString",
+        "toLocaleString",
+        "valueOf",
+        "hasOwnProperty",
+        "isPrototypeOf",
+        "propertyIsEnumerable",
+        "constructor"
     ],
     dontEnumsLength = dontEnums.length;
 
-var toObject = function(o) {
+var toObject = function (o) {
     /*jshint eqnull: true */
+    //noinspection Eslint
     if (o == null) { // this matches both null and undefined
-        throw new TypeError("can't convert " + o + ' to object');
+        throw new TypeError("can\"t convert " + o + " to object");
     }
     return Object(o);
 };
 
 shim._.indexOf = Array.prototype.indexOf && isFuncNative(Array.prototype.indexOf) ?
-    function(arr, sought) {
+    function (arr, sought) {
         return arr.indexOf(sought);
-    }:
+    } :
     function indexOf(arr, sought /*, fromIndex */) {
-    var length = arr.length >>> 0;
+        var length = arr.length >>> 0;
 
-    if (!length) {
-        return -1;
-    }
-
-    for (var i = 0; i < length; i++) {
-        if (i in arr && arr[i] === sought) {
-            return i;
-        }
-    }
-    return -1;
-};
-
-var array_forEach = function forEach(arr, fun) {
-            var thisp = arguments[2],
-            i = -1,
-            length = arr.length >>> 0;
-
-        // If no callback function or if callback is not a callable function
-        if (!isFunction(fun)) {
-            throw new TypeError(); // TODO message
+        if (!length) {
+            return -1;
         }
 
-        while (++i < length) {
-            if (i in arr) {
-                // Invoke the callback function with call, passing arguments:
-                // context, property value, property key, thisArg object
-                // context
-                fun.call(thisp, arr[i], i, arr);
+        for (var i = 0; i < length; i++) {
+            if (i in arr && arr[i] === sought) {
+                return i;
             }
         }
+        return -1;
+    };
+
+var array_forEach = function forEach(arr, fun) {
+    var thisp = arguments[2],
+        i = -1,
+        length = arr.length >>> 0;
+
+    // If no callback function or if callback is not a callable function
+    if (!isFunction(fun)) {
+        throw new TypeError(); // TODO message
+    }
+
+    while (++i < length) {
+        if (i in arr) {
+            // Invoke the callback function with call, passing arguments:
+            // context, property value, property key, thisArg object
+            // context
+            fun.call(thisp, arr[i], i, arr);
+        }
+    }
 };
 
-shim.object.keys =  Object.keys && isFuncNative(Object.keys) ? Object.keys :function keys(object) { 
+shim.object.keys = Object.keys && isFuncNative(Object.keys) ? Object.keys : function keys(object) {
     var isFn = isFunction(object),
         isArgs = isArguments(object),
-        isObject = object !== null && typeof object === 'object',
+        isObject = object !== null && typeof object === "object",
         isStr = isObject && isString(object);
 
     if (!isObject && !isFn && !isArgs) {
-        throw new TypeError('Object.keys called on a non-object');
+        throw new TypeError("Object.keys called on a non-object");
     }
 
     var theKeys = [];
@@ -192,137 +194,137 @@ shim.object.getPrototypeOf = Object.getPrototypeOf && isFuncNative(Object.getPro
         } else if (toStr(object.constructor) === "[object Function]") {
             return object.constructor.prototype;
         } else if (object instanceof Object) {
-          return prototypeOfObject;
+            return prototypeOfObject;
         } else {
-          // Correctly return null for Objects created with `Object.create(null)`
-          // (shammed or native) or `{ __proto__: null}`.  Also returns null for
-          // cross-realm objects on browsers that lack `__proto__` support (like
-          // IE <11), but that's the best we can do.
-          return null;
+            // Correctly return null for Objects created with `Object.create(null)`
+            // (shammed or native) or `{ __proto__: null}`.  Also returns null for
+            // cross-realm objects on browsers that lack `__proto__` support (like
+            // IE <11), but that"s the best we can do.
+            return null;
         }
     };
 
 var doesGetOwnPropertyDescriptorWork = function doesGetOwnPropertyDescriptorWork(object) {
     try {
         object.sentinel = 0;
-        return Object.getOwnPropertyDescriptor(object, 'sentinel').value === 0;
+        return Object.getOwnPropertyDescriptor(object, "sentinel").value === 0;
     } catch (exception) {
         return false;
     }
 };
 
-// check whether getOwnPropertyDescriptor works if it's given. Otherwise, shim partially.
+// check whether getOwnPropertyDescriptor works if it"s given. Otherwise, shim partially.
 var getOwnPropertyDescriptorFallback;
 if (Object.defineProperty) {
     var getOwnPropertyDescriptorWorksOnObject = doesGetOwnPropertyDescriptorWork({});
-    var getOwnPropertyDescriptorWorksOnDom = typeof document === 'undefined' ||
-    doesGetOwnPropertyDescriptorWork(document.createElement('div'));
+    var getOwnPropertyDescriptorWorksOnDom = typeof document === "undefined" ||
+        doesGetOwnPropertyDescriptorWork(document.createElement("div"));
     if (!getOwnPropertyDescriptorWorksOnDom || !getOwnPropertyDescriptorWorksOnObject) {
         getOwnPropertyDescriptorFallback = Object.getOwnPropertyDescriptor;
     }
 }
 
-var ERR_NON_OBJECT = 'Object.getOwnPropertyDescriptor called on a non-object: ';
+var ERR_NON_OBJECT = "Object.getOwnPropertyDescriptor called on a non-object: ";
 
 /* eslint-disable no-proto */
 shim.object.getOwnPropertyDescriptor =
-    (Object.getOwnPropertyDescriptor && getOwnPropertyDescriptorFallback) && isFuncNative(Object.getOwnPropertyDescriptor)? 
-	Object.getOwnPropertyDescriptor: 
-	function getOwnPropertyDescriptor(object, property) {
-	if ((typeof object !== 'object' && typeof object !== 'function') || object === null) {
-		throw new TypeError(ERR_NON_OBJECT + object);
-	}
+    (Object.getOwnPropertyDescriptor && getOwnPropertyDescriptorFallback) && isFuncNative(Object.getOwnPropertyDescriptor) ?
+        Object.getOwnPropertyDescriptor :
+        function getOwnPropertyDescriptor(object, property) {
+            if ((typeof object !== "object" && typeof object !== "function") || object === null) {
+                throw new TypeError(ERR_NON_OBJECT + object);
+            }
 
-	// make a valiant attempt to use the real getOwnPropertyDescriptor
-	// for I8's DOM elements.
-	if (getOwnPropertyDescriptorFallback) {
-		try {
-			return getOwnPropertyDescriptorFallback.call(Object, object, property);
-		} catch (exception) {
-			// try the shim if the real one doesn't work
-		}
-	}
+            // make a valiant attempt to use the real getOwnPropertyDescriptor
+            // for I8"s DOM elements.
+            if (getOwnPropertyDescriptorFallback) {
+                try {
+                    return getOwnPropertyDescriptorFallback.call(Object, object, property);
+                } catch (exception) {
+                    // try the shim if the real one doesn't work
+                }
+            }
 
-	var descriptor;
+            var descriptor;
 
-	// If object does not owns property return undefined immediately.
-	if (!owns(object, property)) {
-		return descriptor;
-	}
+            // If object does not owns property return undefined immediately.
+            if (!owns(object, property)) {
+                return descriptor;
+            }
 
-	// If object has a property then it's for sure `configurable`, and
-	// probably `enumerable`. Detect enumerability though.
-	descriptor = {
-		enumerable: isEnumerable(object, property),
-		configurable: true
-	};
+            // If object has a property then it"s for sure `configurable`, and
+            // probably `enumerable`. Detect enumerability though.
+            descriptor = {
+                enumerable: isEnumerable(object, property),
+                configurable: true
+            };
 
-	// If JS engine supports accessor properties then property may be a
-	// getter or setter.
-	if (supportsAccessors) {
-		// Unfortunately `__lookupGetter__` will return a getter even
-		// if object has own non getter property along with a same named
-		// inherited getter. To avoid misbehavior we temporary remove
-		// `__proto__` so that `__lookupGetter__` will return getter only
-		// if it's owned by an object.
-		/* jshint ignore:start */
-		var prototype = object.__proto__;
-        /* jshint ignore:end */
+            // If JS engine supports accessor properties then property may be a
+            // getter or setter.
+            if (supportsAccessors) {
+                // Unfortunately `__lookupGetter__` will return a getter even
+                // if object has own non getter property along with a same named
+                // inherited getter. To avoid misbehavior we temporary remove
+                // `__proto__` so that `__lookupGetter__` will return getter only
+                // if it"s owned by an object.
+                /* jshint ignore:start */
+                var prototype = object.__proto__;
+                /* jshint ignore:end */
 
 
-		var notPrototypeOfObject = object !== prototypeOfObject;
-		// avoid recursion problem, breaking in Opera Mini when
-		// Object.getOwnPropertyDescriptor(Object.prototype, 'toString')
-		// or any other Object.prototype accessor
-		if (notPrototypeOfObject) {
-			/* jshint ignore:start */
-			object.__proto__ = prototypeOfObject;
-			/* jshint ignore:end */
-		}
+                var notPrototypeOfObject = object !== prototypeOfObject;
+                // avoid recursion problem, breaking in Opera Mini when
+                // Object.getOwnPropertyDescriptor(Object.prototype, "toString")
+                // or any other Object.prototype accessor
+                if (notPrototypeOfObject) {
+                    /* jshint ignore:start */
+                    object.__proto__ = prototypeOfObject;
+                    /* jshint ignore:end */
+                }
 
-		var getter = lookupGetter(object, property);
-		var setter = lookupSetter(object, property);
+                var getter = lookupGetter(object, property);
+                var setter = lookupSetter(object, property);
 
-		if (notPrototypeOfObject) {
-			// Once we have getter and setter we can put values back.
-			object.__proto__ = prototype; //jshint ignore:line
-		}
+                if (notPrototypeOfObject) {
+                    // Once we have getter and setter we can put values back.
+                    object.__proto__ = prototype; //jshint ignore:line
+                }
 
-		if (getter || setter) {
-			if (getter) {
-				descriptor.get = getter;
-			}
-			if (setter) {
-				descriptor.set = setter;
-			}
-			// If it was accessor property we're done and return here
-			// in order to avoid adding `value` to the descriptor.
-			return descriptor;
-		}
-	}
+                if (getter || setter) {
+                    if (getter) {
+                        descriptor.get = getter;
+                    }
+                    if (setter) {
+                        descriptor.set = setter;
+                    }
+                    // If it was accessor property we"re done and return here
+                    // in order to avoid adding `value` to the descriptor.
+                    return descriptor;
+                }
+            }
 
-	// If we got this far we know that object has an own property that is
-	// not an accessor so we set it as a value and return descriptor.
-	descriptor.value = object[property];
-	descriptor.writable = true;
-	return descriptor;
-};
-    /* eslint-enable no-proto */
+            // If we got this far we know that object has an own property that is
+            // not an accessor so we set it as a value and return descriptor.
+            descriptor.value = object[property];
+            descriptor.writable = true;
+            return descriptor;
+        };
+/* eslint-enable no-proto */
 
-shim.object.getOwnPropertyNames = Object.getOwnPropertyNames  && isFuncNative(Object.getOwnPropertyNames) ? 
-	Object.getOwnPropertyNames :
+shim.object.getOwnPropertyNames = Object.getOwnPropertyNames && isFuncNative(Object.getOwnPropertyNames) ?
+    Object.getOwnPropertyNames :
     function getOwnPropertyNames(object) {
-	return shim.object.keys(object);
-	};
+        return shim.object.keys(object);
+    };
 
 if (!Object.create || !isFuncNative(Object.create)) {
 
     // Contributed by Brandon Benvie, October, 2012
     var createEmpty;
-    var supportsProto = !({ __proto__: null } instanceof Object);//jshint ignore:line
-                        // the following produces false positives
-                        // in Opera Mini => not a reliable check
-                        // Object.prototype.__proto__ === null
+    var supportsProto = !({__proto__: null} instanceof Object);//jshint ignore:line
+    // the following produces false positives
+    // in Opera Mini => not a reliable check
+    // Object.prototype.__proto__ === null
 
     // Check for document.domain and active x support
     // No need to use active x approach when document.domain is not set
@@ -336,7 +338,7 @@ if (!Object.create || !isFuncNative(Object.create)) {
         }
 
         try {
-            return !!new ActiveXObject('htmlfile');
+            return !!new ActiveXObject("htmlfile");
         } catch (exception) {
             return false;
         }
@@ -349,9 +351,9 @@ if (!Object.create || !isFuncNative(Object.create)) {
         var empty;
         var xDoc;
 
-        xDoc = new ActiveXObject('htmlfile');
+        xDoc = new ActiveXObject("htmlfile");
 
-        xDoc.write('<script><\/script>');
+        xDoc.write("<script><\/script>");
         xDoc.close();
 
         empty = xDoc.parentWindow.Object.prototype;
@@ -364,14 +366,14 @@ if (!Object.create || !isFuncNative(Object.create)) {
     // before the activex approach was added
     // see https://github.com/es-shims/es5-shim/issues/150
     var getEmptyViaIFrame = function getEmptyViaIFrame() {
-        var iframe = document.createElement('iframe');
+        var iframe = document.createElement("iframe");
         var parent = document.body || document.documentElement;
         var empty;
 
-        iframe.style.display = 'none';
+        iframe.style.display = "none";
         parent.appendChild(iframe);
         /* jshint ignore:start */
-        iframe.src = 'javascript:';
+        iframe.src = "javascript:";
         /* jshint ignore:end */
 
         empty = iframe.contentWindow.Object.prototype;
@@ -382,12 +384,12 @@ if (!Object.create || !isFuncNative(Object.create)) {
     };
 
     /* global document */
-    if (supportsProto || typeof document === 'undefined') {
+    if (supportsProto || typeof document === "undefined") {
         createEmpty = function () {
-            return { __proto__: null }; //jshint ignore:line
+            return {__proto__: null}; //jshint ignore:line
         };
     } else {
-        // In old IE __proto__ can't be used to manually set `null`, nor does
+        // In old IE __proto__ can"t be used to manually set `null`, nor does
         // any other method exist to make an object that inherits from nothing,
         // aside from Object.prototype itself. Instead, create a new global
         // object and *steal* its Object.prototype and strip it bare. This is
@@ -405,7 +407,8 @@ if (!Object.create || !isFuncNative(Object.create)) {
             delete empty.toString;
             delete empty.valueOf;
 
-            var Empty = function Empty() {};
+            var Empty = function Empty() {
+            };
             Empty.prototype = empty;
             // short-circuit future calls
             createEmpty = function () {
@@ -418,18 +421,19 @@ if (!Object.create || !isFuncNative(Object.create)) {
     shim.object.create = function create(prototype, properties) {
 
         var object;
-        var Type = function Type() {}; // An empty constructor.
+        var Type = function Type() {
+        }; // An empty constructor.
 
         if (prototype === null) {
             object = createEmpty();
         } else {
-            if (typeof prototype !== 'object' && typeof prototype !== 'function') {
+            if (typeof prototype !== "object" && typeof prototype !== "function") {
                 // In the native implementation `parent` can be `null`
                 // OR *any* `instanceof Object`  (Object|Function|Array|RegExp|etc)
                 // Use `typeof` tho, b/c in old IE, DOM elements are not `instanceof Object`
                 // like they are in modern browsers. Using `Object.create` on DOM elements
                 // is...err...probably inappropriate, but the native version allows for it.
-                throw new TypeError('Object prototype may only be an Object or null'); // same msg as Chrome
+                throw new TypeError("Object prototype may only be an Object or null"); // same msg as Chrome
             }
             Type.prototype = prototype;
             object = new Type();
@@ -449,26 +453,26 @@ if (!Object.create || !isFuncNative(Object.create)) {
         return object;
     };
 } else {
-	shim.object.create = Object.create;
+    shim.object.create = Object.create;
 }
 
 var doesDefinePropertyWork = function doesDefinePropertyWork(object) {
     try {
-        Object.defineProperty(object, 'sentinel', {});
-        return 'sentinel' in object;
+        Object.defineProperty(object, "sentinel", {});
+        return "sentinel" in object;
     } catch (exception) {
         return false;
     }
 };
 
-// check whether defineProperty works if it's given. Otherwise,
+// check whether defineProperty works if it"s given. Otherwise,
 // shim partially.
 var definePropertyFallback;
 var definePropertiesFallback;
 if (Object.defineProperty && isFuncNative(Object.defineProperty)) {
     var definePropertyWorksOnObject = doesDefinePropertyWork({});
-    var definePropertyWorksOnDom = typeof document === 'undefined' ||
-        doesDefinePropertyWork(document.createElement('div'));
+    var definePropertyWorksOnDom = typeof document === "undefined" ||
+        doesDefinePropertyWork(document.createElement("div"));
     if (!definePropertyWorksOnObject || !definePropertyWorksOnDom) {
         definePropertyFallback = Object.defineProperty;
         definePropertiesFallback = Object.defineProperties;
@@ -476,19 +480,19 @@ if (Object.defineProperty && isFuncNative(Object.defineProperty)) {
 }
 
 if (!Object.defineProperty || definePropertyFallback || !isFuncNative(Object.defineProperty)) {
-    var ERR_NON_OBJECT_DESCRIPTOR = 'Property description must be an object: ';
-    var ERR_NON_OBJECT_TARGET = 'Object.defineProperty called on non-object: ';
-    var ERR_ACCESSORS_NOT_SUPPORTED = 'getters & setters can not be defined on this javascript engine';
+    var ERR_NON_OBJECT_DESCRIPTOR = "Property description must be an object: ";
+    var ERR_NON_OBJECT_TARGET = "Object.defineProperty called on non-object: ";
+    var ERR_ACCESSORS_NOT_SUPPORTED = "getters & setters can not be defined on this javascript engine";
 
     shim.object.defineProperty = function defineProperty(object, property, descriptor) {
-        if ((typeof object !== 'object' && typeof object !== 'function') || object === null) {
+        if ((typeof object !== "object" && typeof object !== "function") || object === null) {
             throw new TypeError(ERR_NON_OBJECT_TARGET + object);
         }
-        if ((typeof descriptor !== 'object' && typeof descriptor !== 'function') || descriptor === null) {
+        if ((typeof descriptor !== "object" && typeof descriptor !== "function") || descriptor === null) {
             throw new TypeError(ERR_NON_OBJECT_DESCRIPTOR + descriptor);
         }
         // make a valiant attempt to use the real defineProperty
-        // for I8's DOM elements.
+        // for I8"s DOM elements.
         if (definePropertyFallback) {
             try {
                 return definePropertyFallback.call(Object, object, property, descriptor);
@@ -497,13 +501,13 @@ if (!Object.defineProperty || definePropertyFallback || !isFuncNative(Object.def
             }
         }
 
-        // If it's a data property.
-        if ('value' in descriptor) {
+        // If it"s a data property.
+        if ("value" in descriptor) {
 
             if (supportsAccessors && (lookupGetter(object, property) || lookupSetter(object, property))) {
                 // As accessors are supported only on engines implementing
                 // `__proto__` we can safely override `__proto__` while defining
-                // a property to make sure that we don't hit an inherited
+                // a property to make sure that we don"t hit an inherited
                 // accessor.
                 /* jshint ignore:start */
                 var prototype = object.__proto__;
@@ -519,28 +523,28 @@ if (!Object.defineProperty || definePropertyFallback || !isFuncNative(Object.def
                 object[property] = descriptor.value;
             }
         } else {
-            if (!supportsAccessors && (('get' in descriptor) || ('set' in descriptor))) {
+            if (!supportsAccessors && (("get" in descriptor) || ("set" in descriptor))) {
                 throw new TypeError(ERR_ACCESSORS_NOT_SUPPORTED);
             }
             // If we got that far then getters and setters can be defined !!
-            if ('get' in descriptor) {
+            if ("get" in descriptor) {
                 defineGetter(object, property, descriptor.get);
             }
-            if ('set' in descriptor) {
+            if ("set" in descriptor) {
                 defineSetter(object, property, descriptor.set);
             }
         }
         return object;
     };
-}else{
-	shim.object.defineProperty = Object.defineProperty;
+} else {
+    shim.object.defineProperty = Object.defineProperty;
 }
 
 // ES5 15.2.3.7
 // http://es5.github.com/#x15.2.3.7
-shim.object.defineProperties = Object.defineProperties && definePropertiesFallback && isFuncNative(Object.defineProperties)? 
-		Object.defineProperties :
-        function defineProperties(object, properties) {
+shim.object.defineProperties = Object.defineProperties && definePropertiesFallback && isFuncNative(Object.defineProperties) ?
+    Object.defineProperties :
+    function defineProperties(object, properties) {
         // make a valiant attempt to use the real defineProperties
         if (definePropertiesFallback) {
             try {
@@ -551,7 +555,7 @@ shim.object.defineProperties = Object.defineProperties && definePropertiesFallba
         }
 
         array_forEach(shim.object.keys(properties), function (property) {
-            if (property !== '__proto__') {
+            if (property !== "__proto__") {
                 shim.object.defineProperty(object, property, properties[property]);
             }
         });
@@ -564,7 +568,7 @@ shim.object.defineProperties = Object.defineProperties && definePropertiesFallba
 shim.object.seal = Object.seal && isFuncNative(Object.seal) ? Object.seal :
     function seal(object) {
         if (toObject(object) !== object) {
-            throw new TypeError('Object.seal can only be called on Objects.');
+            throw new TypeError("Object.seal can only be called on Objects.");
         }
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
@@ -574,10 +578,10 @@ shim.object.seal = Object.seal && isFuncNative(Object.seal) ? Object.seal :
 
 // ES5 15.2.3.9
 // http://es5.github.com/#x15.2.3.9
-shim.object.freeze = Object.freeze && isFuncNative(Object.freeze)? Object.freeze: 
+shim.object.freeze = Object.freeze && isFuncNative(Object.freeze) ? Object.freeze :
     function freeze(object) {
         if (toObject(object) !== object) {
-            throw new TypeError('Object.freeze can only be called on Objects.');
+            throw new TypeError("Object.freeze can only be called on Objects.");
         }
         // this is misleading and breaks feature-detection, but
         // allows "securable" code to "gracefully" degrade to working
@@ -587,11 +591,12 @@ shim.object.freeze = Object.freeze && isFuncNative(Object.freeze)? Object.freeze
 
 // detect a Rhino bug and patch it
 try {
-    Object.freeze(function () {});
+    Object.freeze(function () {
+    });
 } catch (exception) {
     shim.object.freeze = (function (freezeObject) {
         return function freeze(object) {
-            if (typeof object === 'function') {
+            if (typeof object === "function") {
                 return object;
             } else {
                 return freezeObject(object);
@@ -602,61 +607,61 @@ try {
 
 // ES5 15.2.3.10
 // http://es5.github.com/#x15.2.3.10
-shim.object.preventExtensions = Object.preventExtensions && isFuncNative(Object.preventExtensions)? 
-	Object.preventExtensions: function preventExtensions(object) {
-	if (toObject(object) !== object) {
-		throw new TypeError('Object.preventExtensions can only be called on Objects.');
-	}
-	// this is misleading and breaks feature-detection, but
-	// allows "securable" code to "gracefully" degrade to working
-	// but insecure code.
-	return object;
+shim.object.preventExtensions = Object.preventExtensions && isFuncNative(Object.preventExtensions) ?
+    Object.preventExtensions : function preventExtensions(object) {
+    if (toObject(object) !== object) {
+        throw new TypeError("Object.preventExtensions can only be called on Objects.");
+    }
+    // this is misleading and breaks feature-detection, but
+    // allows "securable" code to "gracefully" degrade to working
+    // but insecure code.
+    return object;
 };
 
-shim.object.isSealed = Object.isSealed && isFuncNative(Object.isSealed)? Object.isSealed:  function isSealed(object) {
-        if (toObject(object) !== object) {
-            throw new TypeError('Object.isSealed can only be called on Objects.');
-        }
-        return false;
-    };
+shim.object.isSealed = Object.isSealed && isFuncNative(Object.isSealed) ? Object.isSealed : function isSealed(object) {
+    if (toObject(object) !== object) {
+        throw new TypeError("Object.isSealed can only be called on Objects.");
+    }
+    return false;
+};
 
 // ES5 15.2.3.12
 // http://es5.github.com/#x15.2.3.12
-shim.object.isFrozen = Object.isFrozen && isFuncNative(Object.isFrozen)? Object.isFrozen:  function isFrozen(object) {
-        if (toObject(object) !== object) {
-            throw new TypeError('Object.isFrozen can only be called on Objects.');
-        }
-        return false;
-    };
+shim.object.isFrozen = Object.isFrozen && isFuncNative(Object.isFrozen) ? Object.isFrozen : function isFrozen(object) {
+    if (toObject(object) !== object) {
+        throw new TypeError("Object.isFrozen can only be called on Objects.");
+    }
+    return false;
+};
 
 // ES5 15.2.3.13
 // http://es5.github.com/#x15.2.3.13
-shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensible)? Object.isExtensible: function isExtensible(object) {
-        // 1. If Type(O) is not Object throw a TypeError exception.
-        if (toObject(object) !== object) {
-            throw new TypeError('Object.isExtensible can only be called on Objects.');
-        }
-        // 2. Return the Boolean value of the [[Extensible]] internal property of O.
-        var name = '';
-        while (owns(object, name)) {
-            name += '?';
-        }
-        object[name] = true;
-        var returnValue = owns(object, name);
-        delete object[name];
-        return returnValue;
-    };
+shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensible) ? Object.isExtensible : function isExtensible(object) {
+    // 1. If Type(O) is not Object throw a TypeError exception.
+    if (toObject(object) !== object) {
+        throw new TypeError("Object.isExtensible can only be called on Objects.");
+    }
+    // 2. Return the Boolean value of the [[Extensible]] internal property of O.
+    var name = "";
+    while (owns(object, name)) {
+        name += "?";
+    }
+    object[name] = true;
+    var returnValue = owns(object, name);
+    delete object[name];
+    return returnValue;
+};
 
  (function(exports, Object, _){
 
 	 var DependencyResolverException = function (message) {
-	   this.name = 'DependencyResolverException';
+	   this.name = "DependencyResolverException";
 	   this.stack = null;
 	   this.message = message || "A dependency resolver exception has occurred.";
 	   var lines, i, tmp;
-	   if ((typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Chrome') !== -1) ||
-	     (typeof navigator === 'undefined')) {
-	     lines = new Error().stack.split('\n');
+	   if ((typeof navigator !== "undefined" && navigator.userAgent.indexOf("Chrome") !== -1) ||
+	     (typeof navigator === "undefined")) {
+	     lines = new Error().stack.split("\n");
 	     if (lines && lines.length > 2) {
 	       tmp = [];
 	       for (i = 2; i < lines.length; i++) {
@@ -664,25 +669,25 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	           tmp.push(lines[i].trim());
 	         }
 	       }
-	       this.stack = tmp.join('\n');
+	       this.stack = tmp.join("\n");
 	     }
-	   } else if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Firefox') !== -1) {
-	     lines = new Error().stack.split('\n');
+	   } else if (typeof navigator !== "undefined" && navigator.userAgent.indexOf("Firefox") !== -1) {
+	     lines = new Error().stack.split("\n");
 	     if (lines && lines.length > 1) {
 	       tmp = [];
 	       for (i = 1; i < lines.length; i++) {
 	         if (lines[i]) {
-	           tmp.push('at ' + lines[i].trim().replace('@', ' (') + ')');
+	           tmp.push("at " + lines[i].trim().replace("@", " (") + ")");
 	         }
 	       }
-	       this.stack = tmp.join('\n');
+	       this.stack = tmp.join("\n");
 	     }
-	   } else if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Trident') !== -1) {
+	   } else if (typeof navigator !== "undefined" && navigator.userAgent.indexOf("Trident") !== -1) {
 	     try {
 	       throw new Error();
 	     } catch (error) {
-	       if ('stack' in error) {
-	         lines = error.stack.split('\n');
+	       if ("stack" in error) {
+	         lines = error.stack.split("\n");
 	         if (lines && lines.length > 2) {
 	           tmp = [];
 	           for (i = 2; i < lines.length; i++) {
@@ -690,63 +695,32 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	               tmp.push(lines[i].trim());
 	             }
 	           }
-	           this.stack = tmp.join('\n');
+	           this.stack = tmp.join("\n");
 	         }
 	       } else {
-	         this.stack = '';
+	         this.stack = "";
 	       }
 	     }
 	   } else {
 	     var error = new Error();
-	     if ('stack' in error) {
+	     if ("stack" in error) {
 	       this.stack = error.stack;
 	     } else {
-	       this.stack = '';
+	       this.stack = "";
 	     }
 	   }
-	   Object.defineProperty(this, 'name', { enumerable: true });
-	   Object.defineProperty(this, 'message', { enumerable: true });
-	   Object.defineProperty(this, 'stack', { enumerable: true });
+	   Object.defineProperty(this, "name", { enumerable: true });
+	   Object.defineProperty(this, "message", { enumerable: true });
+	   Object.defineProperty(this, "stack", { enumerable: true });
 	   Object.seal(this);
 	 };
 	 
 	 DependencyResolverException.prototype = Object.create(Object.prototype, {
-	 
-	 /*  name: {
-	     get: function () {
-	       return this.__name;
-	     },
-	     set: function (value) {
-	       this.__name = value;
-	     },
-	     enumerable: true
-	   },
-	 
-	   message: {
-	     get: function () {
-	       return this.__message;
-	     },
-	     set: function (value) {
-	       this.__message = value;
-	     },
-	     enumerable: true
-	   },
-	 
-	   stack: {
-	     get: function () {
-	       return this.__stack;
-	     },
-	     set: function (value) {
-	       this.__stack = value;
-	     },
-	     enumerable: true
-	   },
-	 */
 	   toString: {
 	     value: function () {
-	       var msg = this.name + ': ' + this.message;
+	       var msg = this.name + ": " + this.message;
 	       if (this.stack) {
-	         msg += '\n\t' + this.stack.replace(/\n/g, '\n\t');
+	         msg += "\n\t" + this.stack.replace(/\n/g, "\n\t");
 	       }
 	       return msg;
 	     },
@@ -760,6 +734,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	 exports.DependencyResolverException = DependencyResolverException;
 
+	 /* global DependencyResolverException */
 	 var InstanceFactoryOptions = function (options) {
 	   this.name = null;
 	   this.type = null;
@@ -769,52 +744,21 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       if (propertyName in this) {
 	         this[propertyName] = options[propertyName];
 	       } else {
-	         throw new DependencyResolverException("Class 'InstanceFactoryOptions' doesn't have a property '" +
-	           propertyName + "'");
+	         throw new DependencyResolverException("Class \"InstanceFactoryOptions\" doesn\"t have a property \"" +
+	           propertyName + "\"");
 	       }
 	     }
 	   }
-	   Object.defineProperty(this, 'name', { enumerable: true });
-	   Object.defineProperty(this, 'type', { enumerable: true });
-	   Object.defineProperty(this, 'parameters', { enumerable: true });
+	   Object.defineProperty(this, "name", { enumerable: true });
+	   Object.defineProperty(this, "type", { enumerable: true });
+	   Object.defineProperty(this, "parameters", { enumerable: true });
 	   Object.seal(this);
 	 };
 	 
 	 InstanceFactoryOptions.prototype = Object.create(Object.prototype, {
-	 /*
-	   name: {
-	     get: function () {
-	       return this.__name;
-	     },
-	     set: function (value) {
-	       this.__name = value;
-	     },
-	     enumerable: true
-	   },
-	 
-	   type: {
-	     get: function () {
-	       return this.__type;
-	     },
-	     set: function (value) {
-	       this.__type = value;
-	     },
-	     enumerable: true
-	   },
-	 
-	   parameters: {
-	     get: function () {
-	       return this.__parameters;
-	     },
-	     set: function (value) {
-	       this.__parameters = value;
-	     },
-	     enumerable: true
-	   },
-	 */
 	   toString: {
 	     value: function () {
-	       return '[object InstanceFactoryOptions]';
+	       return "[object InstanceFactoryOptions]";
 	     },
 	     enumerable: true
 	   }
@@ -826,16 +770,17 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	 exports.InstanceFactoryOptions = InstanceFactoryOptions;
 
+	 
 	 var IInstanceFactory = Object.create(Object.prototype, {
 	 
 	   create: {
-	     value: function (options) {},
+	     value: function (options) {}, //eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   toString: {
 	     value: function () {
-	       return '[object IInstanceFactory]';
+	       return "[object IInstanceFactory]";
 	     },
 	     enumerable: true
 	   }
@@ -846,6 +791,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	 exports.IInstanceFactory = IInstanceFactory;
 
+	 /* global DependencyResolverException */
 	 var InstanceFactory = function () {
 	   Object.seal(this);
 	 };
@@ -855,12 +801,12 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   create: {
 	     value: function (options) {
 	       if (!options) {
-	         throw new DependencyResolverException("Parameter 'options' is not set");
+	         throw new DependencyResolverException("Parameter \"options\" is not set");
 	       }
-	       if ('type' in options && !options.type) {
+	       if ("type" in options && !options.type) {
 	         throw new DependencyResolverException("Factory can't create object, because type is not set");
 	       }
-	       if (typeof options.type !== 'function') {
+	       if (typeof options.type !== "function") {
 	         throw new DependencyResolverException("Factory can't create object, because given type is not a function");
 	       }
 	       if (options.type === Number || options.type === Date || options.type === Boolean || options.type === String ||
@@ -881,7 +827,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	   toString: {
 	     value: function () {
-	       return '[object InstanceFactory]';
+	       return "[object InstanceFactory]";
 	     },
 	     enumerable: true
 	   }
@@ -896,13 +842,13 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 var INameTransformer = Object.create(Object.prototype, {
 	 
 	   transform: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   toString: {
 	     value: function () {
-	       return '[object INameTransformer]';
+	       return "[object INameTransformer]";
 	     },
 	     enumerable: true
 	   }
@@ -913,6 +859,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	 exports.INameTransformer = INameTransformer;
 
+	 /* global DependencyResolverException */
 	 var NameTransformer = function () {
 	   Object.seal(this);
 	 };
@@ -922,7 +869,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   transform: {
 	     value: function (name) {
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'transform'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"transform\"");
 	       }
 	       return name;
 	     },
@@ -931,7 +878,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	   toString: {
 	     value: function () {
-	       return '[object NameTransformer]';
+	       return "[object NameTransformer]";
 	     },
 	     enumerable: true
 	   }
@@ -951,22 +898,22 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   },
 	 
 	   autowired: {
-	     value: function (value) {},
+	     value: function (value) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   register: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   as: {
-	     value: function (type) {},
+	     value: function (type) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   instance: {
-	     value: function (instance) {},
+	     value: function (instance) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
@@ -981,32 +928,32 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   },
 	 
 	   param: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   withProperties: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   prop: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   val: {
-	     value: function (instance) {},
+	     value: function (instance) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   ref: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   setFactory: {
-	     value: function (factory) {},
+	     value: function (factory) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
@@ -1016,17 +963,17 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   },
 	 
 	   inject: {
-	     value: function (func, name) {},
+	     value: function (func, name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   contains: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   resolve: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
@@ -1036,7 +983,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   },
 	 
 	   setDefaultFactory: {
-	     value: function (factory) {},
+	     value: function (factory) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
@@ -1046,12 +993,12 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   },
 	 
 	   setNameTransformer: {
-	     value: function (transformer) {},
+	     value: function (transformer) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
 	   getRegistration: {
-	     value: function (name) {},
+	     value: function (name) {},//eslint-disable-line no-unused-vars
 	     enumerable: true
 	   },
 	 
@@ -1062,7 +1009,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	   toString: {
 	     value: function () {
-	       return '[object IDependencyResolver]';
+	       return "[object IDependencyResolver]";
 	     },
 	     enumerable: true
 	   }
@@ -1073,6 +1020,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	 exports.IDependencyResolver = IDependencyResolver;
 
+	 /* global DependencyResolverException, InstanceFactory, NameTransformer, InstanceFactoryOptions, debug, index, args */
 	 var DependencyResolver = function (parent) {
 	   this.__parent = parent;
 	   this.__defaultFactory = null;
@@ -1088,17 +1036,17 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   if (parent) {
 	     this.__autowired = parent.isAutowired();
 	   }
-	   Object.defineProperty(this, '__parent', { enumerable: false });
-	   Object.defineProperty(this, '__defaultFactory', { enumerable: false });
-	   Object.defineProperty(this, '__nameTransformer', { enumerable: false });
-	   Object.defineProperty(this, '__autowired', { enumerable: false });
-	   Object.defineProperty(this, '__container', { enumerable: false });
-	   Object.defineProperty(this, '__registration', { enumerable: false });
-	   Object.defineProperty(this, '__withProperties', { enumerable: false });
-	   Object.defineProperty(this, '__withConstructor', { enumerable: false });
-	   Object.defineProperty(this, '__parameter', { enumerable: false });
-	   Object.defineProperty(this, '__property', { enumerable: false });
-	   Object.defineProperty(this, '__function', { enumerable: false });
+	   Object.defineProperty(this, "__parent", { enumerable: false });
+	   Object.defineProperty(this, "__defaultFactory", { enumerable: false });
+	   Object.defineProperty(this, "__nameTransformer", { enumerable: false });
+	   Object.defineProperty(this, "__autowired", { enumerable: false });
+	   Object.defineProperty(this, "__container", { enumerable: false });
+	   Object.defineProperty(this, "__registration", { enumerable: false });
+	   Object.defineProperty(this, "__withProperties", { enumerable: false });
+	   Object.defineProperty(this, "__withConstructor", { enumerable: false });
+	   Object.defineProperty(this, "__parameter", { enumerable: false });
+	   Object.defineProperty(this, "__property", { enumerable: false });
+	   Object.defineProperty(this, "__function", { enumerable: false });
 	   Object.seal(this);
 	 };
 	 
@@ -1116,9 +1064,9 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       if (value === undefined || value === null) {
 	         value = true;
 	       }
-	       if (typeof value !== 'boolean') {
-	         throw new DependencyResolverException("Parameter 'value' passed to the method 'autowired' has to " +
-	           "be a 'boolean'");
+	       if (typeof value !== "boolean") {
+	         throw new DependencyResolverException("Parameter \"value\" passed to the method \"autowired\" has to " +
+	           "be a \"boolean\"");
 	       }
 	       this.__autowired = value;
 	       return this;
@@ -1129,11 +1077,11 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   register: {
 	     value: function (name) {
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'register'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"register\"");
 	       }
-	       if (typeof name !== 'string') {
-	         throw new DependencyResolverException("Parameter 'name' passed to the method 'register' has to be " +
-	           "a 'string'");
+	       if (typeof name !== "string") {
+	         throw new DependencyResolverException("Parameter \"name\" passed to the method \"register\" has to be " +
+	           "a \"string\"");
 	       }
 	       if (!this.__container) {
 	         this.__container = Object.create(null);
@@ -1169,12 +1117,12 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!type) {
-	         throw new DependencyResolverException("Parameter 'type' is not passed to the method 'as' for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Parameter \"type\" is not passed to the method \"as\" for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
-	       if (typeof type !== 'function') {
-	         throw new DependencyResolverException("Parameter 'type' passed to the method 'as' has to be a 'function' " +
-	           "for registration '" + this.__registration.name + "'");
+	       if (typeof type !== "function") {
+	         throw new DependencyResolverException("Parameter \"type\" passed to the method \"as\" has to be a \"function\" " +
+	           "for registration \"" + this.__registration.name + "\"");
 	       }
 	       this.__registration.instance = null;
 	       this.__registration.type = type;
@@ -1200,8 +1148,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (instance === null || instance === undefined) {
-	         throw new DependencyResolverException("Parameter 'instance' is not passed to the method 'instance' for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Parameter \"instance\" is not passed to the method \"instance\" for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
 	       this.__registration.instance = instance;
 	       this.__registration.type = null;
@@ -1224,8 +1172,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" +
-	           this.__registration.name + "'");
+	         throw new DependencyResolverException("Type is not set for registration \"" +
+	           this.__registration.name + "\"");
 	       }
 	       this.__registration.singleton = true;
 	       this.__withConstructor = false;
@@ -1244,8 +1192,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" +
-	           this.__registration.name + "'");
+	         throw new DependencyResolverException("Type is not set for registration \"" +
+	           this.__registration.name + "\"");
 	       }
 	       this.__withConstructor = true;
 	       this.__withProperties = false;
@@ -1263,7 +1211,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
 	       }
 	       var parameters = null,
 	           parameter = null,
@@ -1271,8 +1219,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       if (this.__withConstructor) {
 	         parameters = this.__registration.dependencies.parameters;
 	         if (this.__autowired && (name === undefined || name === null)) {
-	           throw new DependencyResolverException("Parameter 'name' has to be passed to the method, when dependency " +
-	             "container has option 'autowired' enabled");
+	           throw new DependencyResolverException("Parameter \"name\" has to be passed to the method, when dependency " +
+	             "container has option \"autowired\" enabled");
 	         }
 	         parameter = this.__findParameter(name, parameters, this.__registration);
 	       } else if (this.__withProperties) {
@@ -1282,8 +1230,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         parameters = this.__function.parameters;
 	         parameter = this.__findParameter(name, this.__function.parameters, this.__registration);
 	       } else {
-	         throw new DependencyResolverException("Invocation of method 'withConstructor' or 'withProperties' " + 
-	           "is missing for registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Invocation of method \"withConstructor\" or \"withProperties\" " +
+	           "is missing for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (!parameter) {
 	         parameter = {
@@ -1307,7 +1255,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
 	       }
 	       this.__withProperties = true;
 	       this.__withConstructor = false;
@@ -1325,19 +1273,19 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'prop' for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"prop\" for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
-	       if (typeof name !== 'string') {
-	         throw new DependencyResolverException("Parameter 'name' passed to the method 'prop' has to be" +
-	           " a 'string' for registration '" + this.__registration.name + "'");
+	       if (typeof name !== "string") {
+	         throw new DependencyResolverException("Parameter \"name\" passed to the method \"prop\" has to be" +
+	           " a \"string\" for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (!this.__withProperties) {
-	         throw new DependencyResolverException("Invocation of method 'withProperties' is missing for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Invocation of method \"withProperties\" is missing for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
 	       var properties = this.__registration.dependencies.properties,
 	           property = null;
@@ -1369,19 +1317,19 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'func' for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"func\" for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
-	       if (typeof name !== 'string') {
-	         throw new DependencyResolverException("Parameter 'name' passed to the method 'func' has to be" +
-	           " a 'string' for registration '" + this.__registration.name + "'");
+	       if (typeof name !== "string") {
+	         throw new DependencyResolverException("Parameter \"name\" passed to the method \"func\" has to be" +
+	           " a \"string\" for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (!this.__withProperties) {
-	         throw new DependencyResolverException("Invocation of method 'withProperties' is missing for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Invocation of method \"withProperties\" is missing for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
 	       var functions = this.__registration.dependencies.functions,
 	           func = null;
@@ -1412,10 +1360,10 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (instance === null || instance === undefined) {
-	         throw new DependencyResolverException("Parameter 'instance' is not passed to the method 'val'");
+	         throw new DependencyResolverException("Parameter \"instance\" is not passed to the method \"val\"");
 	       }
 	       if (!this.__withProperties && !this.__withConstructor) {
-	         throw new DependencyResolverException("Invocation of method withConstructor' or 'withProperties' " +
+	         throw new DependencyResolverException("Invocation of method withConstructor\" or \"withProperties\" " +
 	           "is missing");
 	       }
 	       if (this.__withConstructor && !this.__parameter) {
@@ -1442,16 +1390,16 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'ref' for " +
-	           "registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"ref\" for " +
+	           "registration \"" + this.__registration.name + "\"");
 	       }
-	       if (typeof name !== 'string') {
-	         throw new DependencyResolverException("Parameter 'name' passed to the method 'ref' has to " +
-	           "be a 'string' for registration '" + this.__registration.name + "'");
+	       if (typeof name !== "string") {
+	         throw new DependencyResolverException("Parameter \"name\" passed to the method \"ref\" has to " +
+	           "be a \"string\" for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (!this.__withProperties && !this.__withConstructor) {
-	         throw new DependencyResolverException("Invocation of method 'withConstructor' or 'withProperties' " +
-	           "is missing for registration '" + this.__registration.name + "'");
+	         throw new DependencyResolverException("Invocation of method \"withConstructor\" or \"withProperties\" " +
+	           "is missing for registration \"" + this.__registration.name + "\"");
 	       }
 	       if (this.__withConstructor && !this.__parameter) {
 	         throw new DependencyResolverException("Parameter is not defined");
@@ -1460,7 +1408,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Parameter or property is not defined");
 	       }
 	       if (!this.contains(name)) {
-	         throw new DependencyResolverException("Type or instance is not registered with name '" + name + "'");
+	         throw new DependencyResolverException("Type or instance is not registered with name \"" + name + "\"");
 	       }
 	       if (this.__parameter) {
 	         this.__parameter.value = undefined;
@@ -1480,18 +1428,18 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         throw new DependencyResolverException("Registration's name is not defined");
 	       }
 	       if (!factory) {
-	         throw new DependencyResolverException("Parameter 'factory' is not passed to the method 'setFactory");
+	         throw new DependencyResolverException("Parameter \"factory\" is not passed to the method \"setFactory\"");
 	       }
-	       if (typeof factory !== 'function' && typeof factory !== 'object') {
-	         throw new DependencyResolverException("Parameter 'factory' passed to the method 'setFactory' has to be " +
-	           "a 'function' or 'object'");
+	       if (typeof factory !== "function" && typeof factory !== "object") {
+	         throw new DependencyResolverException("Parameter \"factory\" passed to the method \"setFactory\" has to be " +
+	           "a \"function\" or \"object\"");
 	       }
-	       if (typeof factory === 'object' && !('create' in factory)) {
-	         throw new DependencyResolverException("Factory's instance passed to the method 'setFactory' has to have " +
-	           "a method 'create'");
+	       if (typeof factory === "object" && !("create" in factory)) {
+	         throw new DependencyResolverException("Factory's instance passed to the method \"setFactory\" has to have " +
+	           "a method \"create\"");
 	       }
 	       if (!this.__registration.type) {
-	         throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name);
+	         throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name);
 	       }
 	       this.__registration.factory = factory;
 	       this.__withConstructor = false;
@@ -1514,40 +1462,40 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   inject: {
 	     value: function (func) {
 	       if (!func) {
-	         throw new DependencyResolverException("Parameter 'func' is not passed to method 'inject'");
+	         throw new DependencyResolverException("Parameter \"func\" is not passed to method \"inject\"");
 	       }
 	       var i,
 	           parameters = [],
 	           context = { resolving: [] };
 	       if (func instanceof Array) {
 	         if (func.length === 0) {
-	           throw new DependencyResolverException("The array passed to the method 'inject' can't be empty");
+	           throw new DependencyResolverException("The array passed to the method \"inject\" can't be empty");
 	         }
 	         for (i = 0; i < func.length - 1; i++) {
 	           parameters.push(func[i]);
 	         }
 	         func = func[func.length - 1];
-	         if (typeof func !== 'function') {
-	           throw new DependencyResolverException("The last item of the array passed to the method 'inject' has " +
-	             "to be a 'function'");
+	         if (typeof func !== "function") {
+	           throw new DependencyResolverException("The last item of the array passed to the method \"inject\" has " +
+	             "to be a \"function\"");
 	         }
 	         for (i = 0; i < parameters.length; i++) {
-	           if (typeof parameters[i] === 'string' && this.contains(parameters[i])) {
+	           if (typeof parameters[i] === "string" && this.contains(parameters[i])) {
 	             parameters[i] = this.__resolve(parameters[i], context);
 	           }
 	         }
 	         func.apply(null, parameters);
 	       } else {
 	         var registration = null;
-	         if (arguments.length === 2 && typeof arguments[1] === 'string') {
+	         if (arguments.length === 2 && typeof arguments[1] === "string") {
 	           var name = arguments[1];
 	           if (!this.contains(name)) {
-	             throw new DependencyResolverException("Type with name '" + name + "' is not registered");
+	             throw new DependencyResolverException("Type with name \"" + name + "\" is not registered");
 	           }
 	           registration = this.getRegistration(name);
 	         }
 	         var dependencyName;
-	         if (typeof func === 'function') {
+	         if (typeof func === "function") {
 	           if (registration) {
 	             parameters = this.__getConstructorParameters(registration, context);
 	           } else {
@@ -1562,12 +1510,12 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	             }
 	           }
 	           func.apply(null, parameters);
-	         } else if (typeof func === 'object') {
+	         } else if (typeof func === "object") {
 	           if (registration) {
 	             this.__setProperties(func, registration, context);
 	             this.__invokeFunctions(func, registration, context);
 	           } else {
-	             for (var propertyName in func) {
+	             for (var propertyName in func) {//eslint-disable-line guard-for-in
 	               dependencyName = this.__resolveDependencyName(propertyName);
 	               if (this.contains(dependencyName)) {
 	                 parameters.push({
@@ -1583,7 +1531,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	             }
 	           }
 	         } else {
-	           throw new DependencyResolverException("Invalid parameter has been passed to the method 'inject'");
+	           throw new DependencyResolverException("Invalid parameter has been passed to the method \"inject\"");
 	         }
 	       }
 	       return this;
@@ -1594,10 +1542,10 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   contains: {
 	     value: function (name) {
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'contains'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"contains\"");
 	       }
-	       if (typeof name !== 'string') {
-	         throw new DependencyResolverException("Parameter 'name' passed to the  has to be a 'string'");
+	       if (typeof name !== "string") {
+	         throw new DependencyResolverException("Parameter \"name\" passed to the  has to be a \"string\"");
 	       }
 	       var has = false;
 	       if (this.__container) {
@@ -1606,8 +1554,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         }
 	       }
 	       if (!has && this.__parent) {
-	         if (!('contains' in this.__parent)) {
-	           throw new DependencyResolverException("Dependency resolver's parent doesn't have a method 'contains'");
+	         if (!("contains" in this.__parent)) {
+	           throw new DependencyResolverException("Dependency resolver's parent doesn't have a method \"contains\"");
 	         }
 	         has = this.__parent.contains(name);
 	       }
@@ -1631,9 +1579,9 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       if (this.__defaultFactory) {
 	         factory = this.__defaultFactory;
 	       } else if (this.__parent) {
-	         if (!('getDefaultFactory' in this.__parent)) {
+	         if (!("getDefaultFactory" in this.__parent)) {
 	           throw new DependencyResolverException("Dependency resolver's parent doesn't have a " +
-	             "method 'getDefaultFactory'");
+	             "method \"getDefaultFactory\"");
 	         }
 	         factory = this.__parent.getDefaultFactory();
 	       } else {
@@ -1647,16 +1595,16 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   setDefaultFactory: {
 	     value: function (factory) {
 	       if (!factory) {
-	         throw new DependencyResolverException("Parameter 'factory' is not passed to the method " +
-	           "'setDefaultFactory");
+	         throw new DependencyResolverException("Parameter \"factory\" is not passed to the method " +
+	           "\"setDefaultFactory\"");
 	       }
-	       if (typeof factory !== 'function' && typeof factory !== 'object') {
-	         throw new DependencyResolverException("Parameter 'factory' passed to the method 'setDefaultFactory' has " +
-	           " to be a 'function' or 'object'");
+	       if (typeof factory !== "function" && typeof factory !== "object") {
+	         throw new DependencyResolverException("Parameter \"factory\" passed to the method \"setDefaultFactory\" has " +
+	           " to be a \"function\" or \"object\"");
 	       }
-	       if (typeof factory === 'object' && !('create' in factory)) {
-	         throw new DependencyResolverException("Factory's instance passed to the method 'setDefaultFactory' has " +
-	           "to have a method 'create'");
+	       if (typeof factory === "object" && !("create" in factory)) {
+	         throw new DependencyResolverException("Factory's instance passed to the method \"setDefaultFactory\" has " +
+	           "to have a method \"create\"");
 	       }
 	       this.__defaultFactory = factory;
 	       return this;
@@ -1670,9 +1618,9 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       if (this.__nameTransformer) {
 	         transformer = this.__nameTransformer;
 	       } else if (this.__parent) {
-	         if (!('getNameTransformer' in this.__parent)) {
+	         if (!("getNameTransformer" in this.__parent)) {
 	           throw new DependencyResolverException("Dependency resolver's parent doesn't have a " +
-	             "method 'getNameTransformer'");
+	             "method \"getNameTransformer\"");
 	         }
 	         transformer = this.__parent.getNameTransformer();
 	       } else {
@@ -1686,16 +1634,16 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   setNameTransformer: {
 	     value: function (transformer) {
 	       if (!transformer) {
-	         throw new DependencyResolverException("Parameter 'transformer' is not passed to the method " +
-	           "'setNameTransformer'");
+	         throw new DependencyResolverException("Parameter \"transformer\" is not passed to the method " +
+	           "\"setNameTransformer\"");
 	       }
-	       if (typeof transformer !== 'function' && typeof transformer !== 'object') {
-	         throw new DependencyResolverException("Parameter 'transformer' passed to the method 'setNameTransformer' " +
-	           "has to be a 'function' or 'object'");
+	       if (typeof transformer !== "function" && typeof transformer !== "object") {
+	         throw new DependencyResolverException("Parameter \"transformer\" passed to the method \"setNameTransformer\" " +
+	           "has to be a \"function\" or \"object\"");
 	       }
-	       if (typeof transformer === 'object' && !('transform' in transformer)) {
-	         throw new DependencyResolverException("Trabsformers's instance passed to the method 'setNameTransformer' " +
-	           "has to have a method 'transform'");
+	       if (typeof transformer === "object" && !("transform" in transformer)) {
+	         throw new DependencyResolverException("Trabsformers's instance passed to the method \"setNameTransformer\" " +
+	           "has to have a method \"transform\"");
 	       }
 	       this.__nameTransformer = transformer;
 	       return this;
@@ -1709,9 +1657,9 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       if (this.__container && name in this.__container) {
 	         registration = this.__container[name];
 	       } else if (this.__parent) {
-	         if (!('getRegistration' in this.__parent)) {
-	           throw new DependencyResolverException("Dependency resolver's parent doesn't have a " +
-	             "method 'getRegistration'");
+	         if (!("getRegistration" in this.__parent)) {
+	           throw new DependencyResolverException("Dependency resolver\"s parent doesn't have a " +
+	             "method \"getRegistration\"");
 	         }
 	         registration = this.__parent.getRegistration(name);
 	       }
@@ -1728,7 +1676,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         for (var name in this.__container) {
 	           if (!(this.__container[name] instanceof Array)) {
 	             registration = this.__container[name];
-	             if (registration.instance && ('dispose' in registration.instance)) {
+	             if (registration.instance && ("dispose" in registration.instance)) {
 	               registration.instance.dispose();
 	             }
 	             registration.instance = null;
@@ -1737,7 +1685,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	             var registrations = this.__container[name];
 	             for (i = 0; i < registrations.length; i++) {
 	               registration = registrations[i];
-	               if (registration.instance && ('dispose' in registration.instance)) {
+	               if (registration.instance && ("dispose" in registration.instance)) {
 	                 registration.instance.dispose();
 	               }
 	               registration.instance = null;
@@ -1763,25 +1711,24 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	   toString: {
 	     value: function () {
-	       return '[object DependencyResolver]';
+	       return "[object DependencyResolver]";
 	     },
 	     enumerable: true
 	   },
 	 
 	   __getFunctionArguments: {
 	     value: function (func) {
-	       if (func && typeof func === 'function' && 'toString' in func) {
+	       if (func && typeof func === "function" && "toString" in func) {
 	         var str = null;
-	         var result = func
-	           .toString()
+	         var result = _.function_toString.call(func)
 	           .match(/^[\s\(]*function[^(]*\(([^)]*)\)/);
 	         if (result && result.length > 1) {
 	           str = result[1]
-	             .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
-	             .replace(/\s+/g, '');
+	             .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, "")
+	             .replace(/\s+/g, "");
 	         }
 	         if (str) {
-	           return str.split(',');
+	           return str.split(",");
 	         }
 	       }
 	       return [];
@@ -1791,25 +1738,25 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   __resolve: {
 	     value: function (name, context) {
 	       if (!name) {
-	         throw new DependencyResolverException("Parameter 'name' is not passed to the method 'resolve'");
+	         throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"resolve\"");
 	       }
-	       if (typeof name !== 'string') {
-	         throw new DependencyResolverException("Parameter 'name' passed to the method 'resolve' has to be " +
-	           "a 'string'");
+	       if (typeof name !== "string") {
+	         throw new DependencyResolverException("Parameter \"name\" passed to the method \"resolve\" has to be " +
+	           "a \"string\"");
 	       }
-	       if (debug && console && 'log' in console) {
-	         var message = "-> '" + name + "'";
+	       if (debug && console && "log" in console) {
+	         var message = "-> \"" + name + "\"";
 	         for (var j = 0; j < context.resolving.length; j++) {
 	           message = "  " + message;
 	         }
 	         console.log(message);
 	       }
 	       if (!this.contains(name)) {
-	         throw new DependencyResolverException("Type or instance with name '" + name + "' is not registered");
+	         throw new DependencyResolverException("Type or instance with name \"" + name + "\" is not registered");
 	       }
 	       var index = _.indexOf(context.resolving, name);
 	       if (index !== -1) {
-	         throw new DependencyResolverException("Can not resolve circular dependency '" + name + "'");
+	         throw new DependencyResolverException("Can not resolve circular dependency \"" + name + "\"");
 	       }
 	       context.resolving.push(name);
 	       var instance = null,
@@ -1843,7 +1790,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	           registration.instance = instance;
 	         }
 	         if (!instance) {
-	           throw new DependencyResolverException("Failed to resolve instance by name '" + registration.name + "'");
+	           throw new DependencyResolverException("Failed to resolve instance by name \"" + registration.name + "\"");
 	         }
 	       }
 	       return instance;
@@ -1853,7 +1800,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   __resolveDependencyName: {
 	     value: function (name) {
 	       var transform = this.getNameTransformer();
-	       if (typeof transform === 'function') {
+	       if (typeof transform === "function") {
 	         name = transform(name);
 	       } else {
 	         name = transform.transform(name);
@@ -1867,7 +1814,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	   __createInstance: {
 	     value: function (registration, context) {
-	       var i,
+	       var i,//eslint-disable-line no-unused-vars
 	           instance;
 	       var parameters = this.__getConstructorParameters(registration, context);
 	       var options = new InstanceFactoryOptions({
@@ -1882,7 +1829,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         factory = this.getDefaultFactory();
 	       }
 	       if (factory) {
-	         if (typeof factory === 'function') {
+	         if (typeof factory === "function") {
 	           instance = factory.call(null, options);
 	         } else {
 	           instance = factory.create(options);
@@ -1932,8 +1879,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	             }
 	             index = _.indexOf(args, parameter.name);
 	             if (index === -1) {
-	               throw new DependencyResolverException("Constructor in registration '" + registration.name +
-	                 "' doesn't have defined parameter '" + parameter.name + "'");
+	               throw new DependencyResolverException("Constructor in registration \"" + registration.name +
+	                 "\" doesn't have defined parameter \"" + parameter.name + "\"");
 	             }
 	             parameters[index] = value;
 	           } else {
@@ -1966,17 +1913,17 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	     value: function (name, parameters, registration) {
 	       var parameter = null;
 	       if (name !== null && name !== undefined && registration !== null) {
-	         if (typeof name === 'number') {
+	         if (typeof name === "number") {
 	           index = name;
 	           name = undefined;
 	           if (index < 0) {
-	             throw new DependencyResolverException("Parameter 'name' passed to the method 'param' is out of " +
-	               "range for registration '" + registration.name + "'");
+	             throw new DependencyResolverException("Parameter \"name\" passed to the method \"param\" is out of " +
+	               "range for registration \"" + registration.name + "\"");
 	           }
 	           if (index < parameters.length) {
 	             parameter = parameters[index];
 	           }
-	         } else if (typeof name === 'string') {
+	         } else if (typeof name === "string") {
 	           for (var i = 0; i < parameters.length; i++) {
 	             if (parameters[i].name === name) {
 	               parameter = parameters[i];
@@ -1984,8 +1931,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	             }
 	           }
 	         } else {
-	           throw new DependencyResolverException("Parameter 'name' passed to the method 'param' has to " +
-	             "be a 'number' or a 'string' for registration '" + registration.name + "'");
+	           throw new DependencyResolverException("Parameter \"name\" passed to the method \"param\" has to " +
+	             "be a \"number\" or a \"string\" for registration \"" + registration.name + "\"");
 	         }
 	       }
 	       return parameter;
@@ -1996,7 +1943,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	     value: function (instance, registration, context) {
 	       if (registration.dependencies) {
 	         if (this.__autowired) {
-	           for (var propertyName in instance) {
+	           for (var propertyName in instance) {//eslint-disable-line guard-for-in
 	             var dependencyName = this.__resolveDependencyName(propertyName);
 	             if (!this.__hasProperty(registration, propertyName) && this.contains(dependencyName)) {
 	               instance[propertyName] = this.__resolve(dependencyName, context);
@@ -2006,8 +1953,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         for (var i = 0; i < registration.dependencies.properties.length; i++) {
 	           var property = registration.dependencies.properties[i];
 	           if (!(property.name in instance)) {
-	             throw new DependencyResolverException("Resolved object '" + registration.name + 
-	               "' doesn't have property '" + property.name + "'");
+	             throw new DependencyResolverException("Resolved object \"" + registration.name +
+	               "\" doesn't have property \"" + property.name + "\"");
 	           }
 	           if (property.value !== undefined) {
 	             instance[property.name] = property.value;
@@ -2029,8 +1976,8 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	         for (i = 0; i < registration.dependencies.functions.length; i++) {
 	           var func = registration.dependencies.functions[i];
 	           if (!(func.name in instance)) {
-	             throw new DependencyResolverException("Resolved object '" + registration.name + 
-	               "' doesn't have function '" + func.name + "'");
+	             throw new DependencyResolverException("Resolved object \"" + registration.name +
+	               "\" doesn't have function \"" + func.name + "\"");
 	           }
 	           var parameters = [];
 	           for (j = 0; j < func.parameters.length; j++) {
@@ -2046,12 +1993,12 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	               parameters[parameter.index] = value;
 	             } else if (parameter.name) {
 	               if (!args) {
-	                 args = this.__getFunctionArguments(instance[func.name]);
+	                 args = this.__getFunctionArguments(instance[func.name]);//eslint-disable-line
 	               }
 	               index = _.indexOf(args, parameter.name);
 	               if (index === -1) {
-	                 throw new DependencyResolverException("Function doesn't have defined parameter '" + 
-	                   parameter.name + "'");
+	                 throw new DependencyResolverException("Function doesn't have defined parameter \"" +
+	                   parameter.name + "\"");
 	               }
 	               parameters[index] = value;
 	             } else {
@@ -2071,10 +2018,11 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	 
 	 exports.DependencyResolver = DependencyResolver;
 
+	 /* global DependencyResolver*/
 	 var defaultDependencyResolver = null,
 	     debug = false;
 	 
-	 Object.defineProperty(exports, 'getDefaultDependencyResolver', {
+	 Object.defineProperty(exports, "getDefaultDependencyResolver", {
 	   value: function () {
 	     if (!defaultDependencyResolver) {
 	       defaultDependencyResolver = new DependencyResolver();
@@ -2084,14 +2032,14 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'setDefaultDependencyResolver', {
+	 Object.defineProperty(exports, "setDefaultDependencyResolver", {
 	   value: function (value) {
 	     defaultDependencyResolver = value;
 	   },
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'isAutowired', {
+	 Object.defineProperty(exports, "isAutowired", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2100,7 +2048,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'autowired', {
+	 Object.defineProperty(exports, "autowired", {
 	   value: function (value) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2109,7 +2057,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'register', {
+	 Object.defineProperty(exports, "register", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2118,7 +2066,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'as', {
+	 Object.defineProperty(exports, "as", {
 	   value: function (type) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2127,7 +2075,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'instance', {
+	 Object.defineProperty(exports, "instance", {
 	   value: function (instance) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2136,7 +2084,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'asSingleton', {
+	 Object.defineProperty(exports, "asSingleton", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2145,7 +2093,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'withConstructor', {
+	 Object.defineProperty(exports, "withConstructor", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2154,7 +2102,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'param', {
+	 Object.defineProperty(exports, "param", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2163,7 +2111,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'withProperties', {
+	 Object.defineProperty(exports, "withProperties", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2172,7 +2120,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'prop', {
+	 Object.defineProperty(exports, "prop", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2180,7 +2128,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   }
 	 });
 	 
-	 Object.defineProperty(exports, 'func', {
+	 Object.defineProperty(exports, "func", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2188,7 +2136,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   }
 	 });
 	 
-	 Object.defineProperty(exports, 'val', {
+	 Object.defineProperty(exports, "val", {
 	   value: function (instance) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2197,7 +2145,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'ref', {
+	 Object.defineProperty(exports, "ref", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2206,7 +2154,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'setFactory', {
+	 Object.defineProperty(exports, "setFactory", {
 	   value: function (factory) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2215,7 +2163,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'create', {
+	 Object.defineProperty(exports, "create", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2224,7 +2172,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'inject', {
+	 Object.defineProperty(exports, "inject", {
 	   value: function (func, name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2233,7 +2181,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'contains', {
+	 Object.defineProperty(exports, "contains", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2242,7 +2190,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'resolve', {
+	 Object.defineProperty(exports, "resolve", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2251,7 +2199,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'getDefaultFactory', {
+	 Object.defineProperty(exports, "getDefaultFactory", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2260,7 +2208,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'setDefaultFactory', {
+	 Object.defineProperty(exports, "setDefaultFactory", {
 	   value: function (factory) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2269,7 +2217,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'getNameTransformer', {
+	 Object.defineProperty(exports, "getNameTransformer", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2278,7 +2226,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'setNameTransformer', {
+	 Object.defineProperty(exports, "setNameTransformer", {
 	   value: function (transformer) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2287,7 +2235,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'getRegistration', {
+	 Object.defineProperty(exports, "getRegistration", {
 	   value: function (name) {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2296,18 +2244,12 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'debug', {
-	   /*get: function () {
-	     return debug;
-	   },
-	   set: function (value) {
-	     debug = value;
-	   },*/
+	 Object.defineProperty(exports, "debug", {
 	   value:debug,
 	   enumerable: true
 	 });
 	 
-	 Object.defineProperty(exports, 'dispose', {
+	 Object.defineProperty(exports, "dispose", {
 	   value: function () {
 	     return exports
 	       .getDefaultDependencyResolver()
@@ -2328,12 +2270,6 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	     return exports;
 	 };
 	 
-	 /*if (typeof define === "function" && define.amd) {
-	     define(function () { return exports; });
-	 } else {
-	     window.di = exports;
-	 }*/
-	 
 
 	} (exports, shim.object, shim._));
 
@@ -2341,3 +2277,5 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 
 } ());
 
+
+//# sourceMappingURL=di4js.map

@@ -1,13 +1,13 @@
 var INameTransformer = Object.create(Object.prototype, {
 
   transform: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   toString: {
     value: function () {
-      return '[object INameTransformer]';
+      return "[object INameTransformer]";
     },
     enumerable: true
   }

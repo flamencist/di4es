@@ -1,7 +1,8 @@
+/* global DependencyResolver*/
 var defaultDependencyResolver = null,
     debug = false;
 
-Object.defineProperty(exports, 'getDefaultDependencyResolver', {
+Object.defineProperty(exports, "getDefaultDependencyResolver", {
   value: function () {
     if (!defaultDependencyResolver) {
       defaultDependencyResolver = new DependencyResolver();
@@ -11,14 +12,14 @@ Object.defineProperty(exports, 'getDefaultDependencyResolver', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'setDefaultDependencyResolver', {
+Object.defineProperty(exports, "setDefaultDependencyResolver", {
   value: function (value) {
     defaultDependencyResolver = value;
   },
   enumerable: true
 });
 
-Object.defineProperty(exports, 'isAutowired', {
+Object.defineProperty(exports, "isAutowired", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -27,7 +28,7 @@ Object.defineProperty(exports, 'isAutowired', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'autowired', {
+Object.defineProperty(exports, "autowired", {
   value: function (value) {
     return exports
       .getDefaultDependencyResolver()
@@ -36,7 +37,7 @@ Object.defineProperty(exports, 'autowired', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'register', {
+Object.defineProperty(exports, "register", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -45,7 +46,7 @@ Object.defineProperty(exports, 'register', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'as', {
+Object.defineProperty(exports, "as", {
   value: function (type) {
     return exports
       .getDefaultDependencyResolver()
@@ -54,7 +55,7 @@ Object.defineProperty(exports, 'as', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'instance', {
+Object.defineProperty(exports, "instance", {
   value: function (instance) {
     return exports
       .getDefaultDependencyResolver()
@@ -63,7 +64,7 @@ Object.defineProperty(exports, 'instance', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'asSingleton', {
+Object.defineProperty(exports, "asSingleton", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -72,7 +73,7 @@ Object.defineProperty(exports, 'asSingleton', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'withConstructor', {
+Object.defineProperty(exports, "withConstructor", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -81,7 +82,7 @@ Object.defineProperty(exports, 'withConstructor', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'param', {
+Object.defineProperty(exports, "param", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -90,7 +91,7 @@ Object.defineProperty(exports, 'param', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'withProperties', {
+Object.defineProperty(exports, "withProperties", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -99,7 +100,7 @@ Object.defineProperty(exports, 'withProperties', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'prop', {
+Object.defineProperty(exports, "prop", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -107,7 +108,7 @@ Object.defineProperty(exports, 'prop', {
   }
 });
 
-Object.defineProperty(exports, 'func', {
+Object.defineProperty(exports, "func", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -115,7 +116,7 @@ Object.defineProperty(exports, 'func', {
   }
 });
 
-Object.defineProperty(exports, 'val', {
+Object.defineProperty(exports, "val", {
   value: function (instance) {
     return exports
       .getDefaultDependencyResolver()
@@ -124,7 +125,7 @@ Object.defineProperty(exports, 'val', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'ref', {
+Object.defineProperty(exports, "ref", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -133,7 +134,7 @@ Object.defineProperty(exports, 'ref', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'setFactory', {
+Object.defineProperty(exports, "setFactory", {
   value: function (factory) {
     return exports
       .getDefaultDependencyResolver()
@@ -142,7 +143,7 @@ Object.defineProperty(exports, 'setFactory', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'create', {
+Object.defineProperty(exports, "create", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -151,7 +152,7 @@ Object.defineProperty(exports, 'create', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'inject', {
+Object.defineProperty(exports, "inject", {
   value: function (func, name) {
     return exports
       .getDefaultDependencyResolver()
@@ -160,7 +161,7 @@ Object.defineProperty(exports, 'inject', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'contains', {
+Object.defineProperty(exports, "contains", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -169,7 +170,7 @@ Object.defineProperty(exports, 'contains', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'resolve', {
+Object.defineProperty(exports, "resolve", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -178,7 +179,7 @@ Object.defineProperty(exports, 'resolve', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'getDefaultFactory', {
+Object.defineProperty(exports, "getDefaultFactory", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -187,7 +188,7 @@ Object.defineProperty(exports, 'getDefaultFactory', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'setDefaultFactory', {
+Object.defineProperty(exports, "setDefaultFactory", {
   value: function (factory) {
     return exports
       .getDefaultDependencyResolver()
@@ -196,7 +197,7 @@ Object.defineProperty(exports, 'setDefaultFactory', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'getNameTransformer', {
+Object.defineProperty(exports, "getNameTransformer", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()
@@ -205,7 +206,7 @@ Object.defineProperty(exports, 'getNameTransformer', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'setNameTransformer', {
+Object.defineProperty(exports, "setNameTransformer", {
   value: function (transformer) {
     return exports
       .getDefaultDependencyResolver()
@@ -214,7 +215,7 @@ Object.defineProperty(exports, 'setNameTransformer', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'getRegistration', {
+Object.defineProperty(exports, "getRegistration", {
   value: function (name) {
     return exports
       .getDefaultDependencyResolver()
@@ -223,18 +224,12 @@ Object.defineProperty(exports, 'getRegistration', {
   enumerable: true
 });
 
-Object.defineProperty(exports, 'debug', {
-  /*get: function () {
-    return debug;
-  },
-  set: function (value) {
-    debug = value;
-  },*/
+Object.defineProperty(exports, "debug", {
   value:debug,
   enumerable: true
 });
 
-Object.defineProperty(exports, 'dispose', {
+Object.defineProperty(exports, "dispose", {
   value: function () {
     return exports
       .getDefaultDependencyResolver()

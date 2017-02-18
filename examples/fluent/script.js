@@ -4,7 +4,7 @@ function Engine(hp) {
 
 Engine.prototype.start = function () {
   console.log("Engine with " + this.hp + " hp has been started...");
-}
+};
 
 function Car(name) {
   this.name = name;
@@ -20,7 +20,7 @@ Car.prototype.start = function () {
     this.engine.start();
   }
   console.log("Car '" + this.name + "' has been started...");
-}
+};
 
 function Driver(name) {
   this.name = name;
@@ -44,7 +44,7 @@ Driver.prototype.drive = function (name) {
       this.cars.start();
     }
   }
-}
+};
   
 di
   .register('engine')

@@ -6,22 +6,22 @@ var IDependencyResolver = Object.create(Object.prototype, {
   },
 
   autowired: {
-    value: function (value) {},
+    value: function (value) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   register: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   as: {
-    value: function (type) {},
+    value: function (type) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   instance: {
-    value: function (instance) {},
+    value: function (instance) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
@@ -36,32 +36,32 @@ var IDependencyResolver = Object.create(Object.prototype, {
   },
 
   param: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   withProperties: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   prop: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   val: {
-    value: function (instance) {},
+    value: function (instance) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   ref: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   setFactory: {
-    value: function (factory) {},
+    value: function (factory) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
@@ -71,17 +71,17 @@ var IDependencyResolver = Object.create(Object.prototype, {
   },
 
   inject: {
-    value: function (func, name) {},
+    value: function (func, name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   contains: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   resolve: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
@@ -91,7 +91,7 @@ var IDependencyResolver = Object.create(Object.prototype, {
   },
 
   setDefaultFactory: {
-    value: function (factory) {},
+    value: function (factory) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
@@ -101,12 +101,12 @@ var IDependencyResolver = Object.create(Object.prototype, {
   },
 
   setNameTransformer: {
-    value: function (transformer) {},
+    value: function (transformer) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   getRegistration: {
-    value: function (name) {},
+    value: function (name) {},//eslint-disable-line no-unused-vars
     enumerable: true
   },
 
@@ -117,7 +117,7 @@ var IDependencyResolver = Object.create(Object.prototype, {
 
   toString: {
     value: function () {
-      return '[object IDependencyResolver]';
+      return "[object IDependencyResolver]";
     },
     enumerable: true
   }

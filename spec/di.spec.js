@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-if (typeof require !== 'undefined' && !di) {
-    di = require('../lib/di4js.js');
+if (typeof require !== "undefined") {
+    var di = require("../lib/di4js.js");
 }
 
 describe("Spec", function () {
@@ -131,9 +131,19 @@ describe("Spec", function () {
     expect(di.dispose).not.toBeUndefined();
   });
 
-  it("should have method 'noConflict'", function () {
+  if(typeof require === "undefined"){
+    it("should have method 'noConflict'", function () {
       expect(di.noConflict).not.toBeUndefined();
-  });
+    });
+
+    it("should call noConflict", function () {
+      var oldDi = di;
+      var localDi = di.noConflict();
+      expect(localDi).not.toBeUndefined();
+      expect(di).toBeUndefined();
+      di = oldDi;
+    });
+  }
 
   it("should activate auto resolving", function () {
     di.autowired();
@@ -141,43 +151,43 @@ describe("Spec", function () {
   });
 
   it("should resolve registered type", function () {
-    di.register('dieselEngine').as(DieselEngine);
-    var instance = di.resolve('dieselEngine');
+    di.register("dieselEngine").as(DieselEngine);
+    var instance = di.resolve("dieselEngine");
     expect(instance).not.toBeNull();
   });
 
   it("should resolve registered instance", function () {
     var engine = new DieselEngine();
-    di.register('dieselEngine').instance(engine);
-    var instance = di.resolve('dieselEngine');
+    di.register("dieselEngine").instance(engine);
+    var instance = di.resolve("dieselEngine");
     expect(instance).toBe(engine);
   });
 
   it("should resolve singleton intstance", function () {
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .as(DieselEngine)
         .asSingleton();
-    var instance1 = di.resolve('dieselEngine');
-    var instance2 = di.resolve('dieselEngine');
+    var instance1 = di.resolve("dieselEngine");
+    var instance2 = di.resolve("dieselEngine");
     expect(instance1).toBe(instance2);
   });
 
   it("should check if name is registered", function () {
-    di.register('dieselEngine').as(DieselEngine);
-    expect(di.contains('dieselEngine')).toBe(true);
+    di.register("dieselEngine").as(DieselEngine);
+    expect(di.contains("dieselEngine")).toBe(true);
   });
 
   it("should set custom factory", function () {
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .as(DieselEngine)
         .setFactory(function (options) {
           var instance = new options.type();
           instance.hp = 156;
           return instance;
         });
-    var instance = di.resolve('dieselEngine');
+    var instance = di.resolve("dieselEngine");
     expect(instance).not.toBeNull();
     expect(instance instanceof DieselEngine).toBe(true);
     expect(instance.hp).toBe(156);
@@ -185,23 +195,23 @@ describe("Spec", function () {
 
   it("should set properties", function () {
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .as(DieselEngine)
         .withProperties()
-          .prop('hp').val(42);
-    var engine = di.resolve('dieselEngine');
+          .prop("hp").val(42);
+    var engine = di.resolve("dieselEngine");
     expect(engine.hp).toBe(42);
   });
 
   it("should pass parameters to the constructor", function () {
     var engine = new DieselEngine();
     di
-      .register('car')
+      .register("car")
         .as(Car)
         .withConstructor()
           .param().val(engine)
           .param().val(1976);
-    var instance = di.resolve('car');
+    var instance = di.resolve("car");
     expect(instance).not.toBeNull();
     expect(instance.engine).toBe(engine);
     expect(instance.year).toBe(1976);
@@ -209,27 +219,27 @@ describe("Spec", function () {
 
   it("should resolve type", function () {
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .as(DieselEngine)
         .withProperties()
-          .prop('hp').val(152)
-      .register('car')
+          .prop("hp").val(152)
+      .register("car")
         .as(Car)
         .withConstructor()
-          .param().ref('dieselEngine')
+          .param().ref("dieselEngine")
           .param().val(1976);
-    var instance = di.resolve('car');
+    var instance = di.resolve("car");
     expect(instance).not.toBeNull();
   });
 
   it("should resolve type's dependencies automatically", function () {
     di
       .autowired()
-      .register('engine')
+      .register("engine")
         .as(DieselEngine)
-      .register('car')
+      .register("car")
         .as(Car);
-    var instance = di.resolve('car');
+    var instance = di.resolve("car");
     expect(instance).not.toBeNull();
     expect(instance.engine).not.toBeUndefined();
   });
@@ -237,21 +247,21 @@ describe("Spec", function () {
   it("should set default factory", function () {
     var engine = new DieselEngine();
     di
-      .setDefaultFactory(function (options) {
+      .setDefaultFactory(function (options) {//eslint-disable-line no-unused-vars
         return engine;
       })
-      .register('dieselEngine')
+      .register("dieselEngine")
         .as(DieselEngine);
-    var instance = di.resolve('dieselEngine');
+    var instance = di.resolve("dieselEngine");
     expect(instance).toBe(engine);
   });
 
   it("should dispose default resolver", function () {
     var callback = jasmine.createSpy();
     var mock = { dispose: callback };
-    di.register('dieselEngine').instance(mock);
+    di.register("dieselEngine").instance(mock);
     di.dispose();
-    expect(di.contains('dieselEngine')).toBe(false);
+    expect(di.contains("dieselEngine")).toBe(false);
     expect(callback).toHaveBeenCalled();
   });
 
@@ -264,7 +274,7 @@ describe("Spec", function () {
     var callback = jasmine.createSpy();
     var engine = new DieselEngine();
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .instance(engine);
     di.inject(function (dieselEngine) {
       callback(dieselEngine);
@@ -276,7 +286,7 @@ describe("Spec", function () {
     var customNameTransformer = {
       transform: function (name) {
         return name.replace(/([A-Z])/g, function (str) {
-          return '-' + str.toLowerCase();
+          return "-" + str.toLowerCase();
         });
       }
     };
@@ -284,7 +294,7 @@ describe("Spec", function () {
     var engine = new DieselEngine();
     di
       .setNameTransformer(customNameTransformer)
-      .register('diesel-engine')
+      .register("diesel-engine")
         .instance(engine);
     di.inject(function (dieselEngine) {
       callback(dieselEngine);
@@ -296,16 +306,16 @@ describe("Spec", function () {
     var callback = jasmine.createSpy();
     var engine = new DieselEngine();
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .instance(engine)
-      .register('car')
+      .register("car")
         .as(Car)
           .withConstructor()
-            .param().ref('dieselEngine')
+            .param().ref("dieselEngine")
             .param().val(2000);
     di.inject(function (engine, year) {
       callback(engine, year);
-    }, 'car');
+    }, "car");
     expect(callback).toHaveBeenCalledWith(engine, 2000);
   });
 
@@ -313,9 +323,9 @@ describe("Spec", function () {
     var callback = jasmine.createSpy();
     var engine = new DieselEngine();
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .instance(engine)
-      .inject(['dieselEngine', callback]);
+      .inject(["dieselEngine", callback]);
     expect(callback).toHaveBeenCalledWith(engine);
   });
 
@@ -327,10 +337,10 @@ describe("Spec", function () {
   });
 
   it("should inject dependencies to the object automatically", function () {
-    var callback = jasmine.createSpy();
+    var callback = jasmine.createSpy();//eslint-disable-line no-unused-vars
     var engine = new DieselEngine();
     di
-      .register('engine')
+      .register("engine")
         .instance(engine);
     var car = new Car();
     di.inject(car);
@@ -338,17 +348,17 @@ describe("Spec", function () {
   });
 
   it("should inject dependencies to the object", function () {
-    var callback = jasmine.createSpy();
+    var callback = jasmine.createSpy();//eslint-disable-line no-unused-vars
     var engine = new DieselEngine();
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .instance(engine)
-      .register('car')
+      .register("car")
         .as(Car)
           .withProperties()
-            .prop('engine').ref('dieselEngine');
+            .prop("engine").ref("dieselEngine");
     var car = new Car();
-    di.inject(car, 'car');
+    di.inject(car, "car");
     expect(car.engine).toBe(engine);
   });
 
@@ -356,40 +366,34 @@ describe("Spec", function () {
     var customNameTransformer = {
       transform: function (name) {
         return name.replace(/([A-Z])/g, function (str) {
-          return '-' + str.toLowerCase();
+          return "-" + str.toLowerCase();
         });
       }
     };
-    var callback = jasmine.createSpy();
+    var callback = jasmine.createSpy();//eslint-disable-line no-unused-vars
     var engine = new DieselEngine();
     di
       .setNameTransformer(customNameTransformer)
-      .register('diesel-engine')
+      .register("diesel-engine")
         .instance(engine)
-      .register('car')
+      .register("car")
         .as(Car)
           .withProperties()
-            .prop('engine').ref('diesel-engine');
+            .prop("engine").ref("diesel-engine");
     var car = new Car();
-    di.inject(car, 'car');
+    di.inject(car, "car");
     expect(car.engine).toBe(engine);
   });
 
   it("should create a child container", function () {
     di
-      .register('dieselEngine')
+      .register("dieselEngine")
         .as(DieselEngine);
     var resolver = di.create();
     expect(resolver).not.toBeNull();
   });
 
-  it("should call noConflict", function () {
-      var oldDi = di;
-      var localDi = di.noConflict();
-      expect(localDi).not.toBeUndefined();
-      expect(di).toBeUndefined();
-      di = oldDi;
-  });
+
 
   describe("class's 'DependencyResolverException' spec", function () {
 
@@ -425,12 +429,12 @@ describe("Spec", function () {
 
     it("should create a new instance of 'InstanceFactoryOptions' class with parameters", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'dieselEngine',
+        name: "dieselEngine",
         type: DieselEngine,
         parameters: []
       });
       expect(options).not.toBeNull();
-      expect(options.name).toBe('dieselEngine');
+      expect(options.name).toBe("dieselEngine");
       expect(options.type).toBe(DieselEngine);
       expect(options.parameters).not.toBeNull();
     });
@@ -438,7 +442,7 @@ describe("Spec", function () {
     it("shoud throw an exception if options object contains a property which is not defined the " +
       "'InstanceFactoryOptions' class", function () {
       expect(function () {
-        var options = new di.InstanceFactoryOptions({
+        var options = new di.InstanceFactoryOptions({//eslint-disable-line no-unused-vars
           unknown: {}
         });
       }).toThrow();
@@ -464,7 +468,7 @@ describe("Spec", function () {
 
     it("should create a new instance from a given type", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'dieselEngine',
+        name: "dieselEngine",
         type: DieselEngine
       });
       var instance = factory.create(options);
@@ -475,7 +479,7 @@ describe("Spec", function () {
     it("should create a new instance from a given type and with parameters", function () {
       var engine = new DieselEngine();
       var options = new di.InstanceFactoryOptions({
-        name: 'car',
+        name: "car",
         type: Car,
         parameters: [ engine, 1976 ]
       });
@@ -488,7 +492,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'Number'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'number',
+        name: "number",
         type: Number
       });
       expect(function () {
@@ -498,7 +502,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'Date'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'date',
+        name: "date",
         type: Date
       });
       expect(function () {
@@ -508,7 +512,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'Boolean'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'boolean',
+        name: "boolean",
         type: Boolean
       });
       expect(function () {
@@ -518,7 +522,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'String'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'string',
+        name: "string",
         type: String
       });
       expect(function () {
@@ -528,7 +532,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'Array'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'array',
+        name: "array",
         type: Array
       });
       expect(function () {
@@ -538,7 +542,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'Function'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'function',
+        name: "function",
         type: Function
       });
       expect(function () {
@@ -548,7 +552,7 @@ describe("Spec", function () {
 
     it("should throw an exception if type is 'RegExp'", function () {
       var options = new di.InstanceFactoryOptions({
-        name: 'regExp',
+        name: "regExp",
         type: RegExp
       });
       expect(function () {
@@ -558,19 +562,19 @@ describe("Spec", function () {
 
     it("should throw an exception if options parameter is not passed to method 'create'", function () {
       expect(function () {
-        var instance = factory.create(null);
+        var instance = factory.create(null);//eslint-disable-line no-unused-vars
       }).toThrow();
     });
 
     it("should throw an exception if type is invalid", function () {
       expect(function () {
-        var instance = factory.create({ type: {} });
+        var instance = factory.create({ type: {} });//eslint-disable-line no-unused-vars
       }).toThrow();
     });
 
     it("should throw an exception if type is not set", function () {
       expect(function () {
-        var instance = factory.create({});
+        var instance = factory.create({});//eslint-disable-line no-unused-vars
       }).toThrow();
     });
 
@@ -589,7 +593,7 @@ describe("Spec", function () {
     });
 
     it("should return the same name", function () {
-      var name = 'engine';
+      var name = "engine";
       var result = transformer.transform(name);
       expect(result).toBe(name);
     });
@@ -620,7 +624,7 @@ describe("Spec", function () {
 
     it("should set registration name", function () {
       expect(function () {
-        resolver.register('dieselEngine');
+        resolver.register("dieselEngine");
       }).not.toThrow();
     });
 
@@ -657,20 +661,20 @@ describe("Spec", function () {
 
     it("should resolve registered type", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine);
-      var instance = resolver.resolve('dieselEngine');
+      var instance = resolver.resolve("dieselEngine");
       expect(instance).not.toBeNull();
     });
 
     it("should resolve type's dependencies automatically", function () {
       resolver
         .autowired()
-        .register('engine')
+        .register("engine")
           .as(DieselEngine)
-        .register('car')
+        .register("car")
           .as(Car);
-      var instance = resolver.resolve('car');
+      var instance = resolver.resolve("car");
       expect(instance).not.toBeNull();
       expect(instance.engine).not.toBeUndefined();
     });
@@ -690,30 +694,30 @@ describe("Spec", function () {
 
     it("should throw an exception if instance doesn't have defined property", function () {
       resolver
-        .register('engine')
+        .register("engine")
           .as(DieselEngine)
             .withProperties()
-              .prop('unknown').val(42);
+              .prop("unknown").val(42);
       expect(function () {
-        resolver.resolve('engine');
+        resolver.resolve("engine");
       }).toThrow();
     });
 
     it("should throw an exception if instance doesn't have defined function", function () {
       resolver
-        .register('engine')
+        .register("engine")
           .as(DieselEngine)
             .withProperties()
-              .func('unknown');
+              .func("unknown");
       expect(function () {
-        resolver.resolve('engine');
+        resolver.resolve("engine");
       }).toThrow();
     });
 
     it("should resolve registered object", function () {
       var engine = new DieselEngine();
-      resolver.register('dieselEngine').instance(engine);
-      var instance = resolver.resolve('dieselEngine');
+      resolver.register("dieselEngine").instance(engine);
+      var instance = resolver.resolve("dieselEngine");
       expect(instance).toBe(engine);
     });
 
@@ -721,11 +725,11 @@ describe("Spec", function () {
       var dieselEngine = new DieselEngine();
       var petrolEngine = new PetrolEngine();
       resolver
-        .register('engine')
+        .register("engine")
           .instance(dieselEngine)
-        .register('engine')
+        .register("engine")
           .instance(petrolEngine);
-      var array = resolver.resolve('engine');
+      var array = resolver.resolve("engine");
       expect(array).not.toBeNull();
       expect(array[0]).toBe(dieselEngine);
       expect(array[1]).toBe(petrolEngine);
@@ -733,43 +737,43 @@ describe("Spec", function () {
 
     it("should resolve registered number", function () {
       var value = 0;
-      resolver.register('number').instance(value);
-      var instance = resolver.resolve('number');
+      resolver.register("number").instance(value);
+      var instance = resolver.resolve("number");
       expect(instance).toBe(value);
     });
 
     it("should resolve registerd boolean", function () {
       var value = false;
-      resolver.register('flag').instance(value);
-      var instance = resolver.resolve('flag');
+      resolver.register("flag").instance(value);
+      var instance = resolver.resolve("flag");
       expect(instance).toBe(value);
     });
 
     it("should resolve registered string", function () {
-      var value = 'Hello world!';
-      resolver.register('str').instance(value);
-      var instance = resolver.resolve('str');
+      var value = "Hello world!";
+      resolver.register("str").instance(value);
+      var instance = resolver.resolve("str");
       expect(instance).toBe(value);
     });
 
     it("should resolve registered date", function () {
       var date = new Date(2013, 12, 14);
-      resolver.register('date').instance(date);
-      var instance = resolver.resolve('date');
+      resolver.register("date").instance(date);
+      var instance = resolver.resolve("date");
       expect(instance).toBe(date);
     });
 
     it("should resolve registered function", function () {
       var value = function () {};
-      resolver.register('func').instance(value);
-      var instance = resolver.resolve('func');
+      resolver.register("func").instance(value);
+      var instance = resolver.resolve("func");
       expect(instance).toBe(value);
     });
 
     it("should resolve registered object", function () {
       var value = {};
-      resolver.register('obj').instance(value);
-      var instance = resolver.resolve('obj');
+      resolver.register("obj").instance(value);
+      var instance = resolver.resolve("obj");
       expect(instance).toBe(value);
     });
 
@@ -783,7 +787,7 @@ describe("Spec", function () {
       function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .asSingleton();
       }).toThrow();
     });
@@ -792,7 +796,7 @@ describe("Spec", function () {
       function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .instance(new DieselEngine())
             .asSingleton();
       }).toThrow();
@@ -800,17 +804,17 @@ describe("Spec", function () {
 
     it("should resolve singleton intstance", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
           .asSingleton();
-      var instance1 = resolver.resolve('dieselEngine');
-      var instance2 = resolver.resolve('dieselEngine');
+      var instance1 = resolver.resolve("dieselEngine");
+      var instance2 = resolver.resolve("dieselEngine");
       expect(instance1).toBe(instance2);
     });
 
     it("should select constructor", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
           .withConstructor();
       expect(resolver.__withConstructor).toBe(true);
@@ -827,7 +831,7 @@ describe("Spec", function () {
     it("should throw an exception while invoking the method 'withConstructor', if type is not set", function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .withConstructor();
       }).toThrow();
     });
@@ -835,16 +839,16 @@ describe("Spec", function () {
     it("should set constructor's parameter by index", function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .as(DieselEngine)
             .withConstructor()
               .param(0).value(100)
-          .register('car')
+          .register("car")
             .as(Car)
             .withConstructor()
               .param(1).value(2000)
-              .param(0).ref('dieselEngine');
-        var instance = resolver.resolve('car');
+              .param(0).ref("dieselEngine");
+        var instance = resolver.resolve("car");
         expect(instance).not.toBeNull();
         expect(instance.year).toBe(2000);
         expect(instance.engine.hp).toBe(100);
@@ -854,16 +858,16 @@ describe("Spec", function () {
     it("should set constructor's parameter by name", function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .as(DieselEngine)
             .withConstructor()
-              .param('hp').value(100)
-          .register('car')
+              .param("hp").value(100)
+          .register("car")
             .as(Car)
             .withConstructor()
-              .param('year').value(2000)
-              .param('engine').ref('dieselEngine');
-        var instance = resolver.resolve('car');
+              .param("year").value(2000)
+              .param("engine").ref("dieselEngine");
+        var instance = resolver.resolve("car");
         expect(instance).not.toBeNull();
         expect(instance.year).toBe(2000);
         expect(instance.engine.hp).toBe(100);
@@ -873,16 +877,16 @@ describe("Spec", function () {
     it("should set constructor's parameter by name and index", function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .as(DieselEngine)
             .withConstructor()
-              .param('hp').value(100)
-          .register('car')
+              .param("hp").value(100)
+          .register("car")
             .as(Car)
             .withConstructor()
               .param(1).value(2000)
-              .param('engine').ref('dieselEngine');
-        var instance = resolver.resolve('car');
+              .param("engine").ref("dieselEngine");
+        var instance = resolver.resolve("car");
         expect(instance).not.toBeNull();
         expect(instance.year).toBe(2000);
         expect(instance.engine.hp).toBe(100);
@@ -894,7 +898,7 @@ describe("Spec", function () {
       expect(function () {
         resolver
           .autowired(true)
-          .register('dieselEngine')
+          .register("dieselEngine")
             .as(DieselEngine)
             .withConstructor()
               .param().val(1987);
@@ -903,39 +907,39 @@ describe("Spec", function () {
 
     it("should select properties", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
           .withProperties();
       expect(resolver.__withProperties).toBe(true);
     });
 
     it("should invoke func", function () {
-      var setEngineSpy = jasmine.createSpy('setEngine');
+      var setEngineSpy = jasmine.createSpy("setEngine");
       var Car = function () {};
       Car.prototype.setEngine = setEngineSpy;
       resolver
-        .register('car')
+        .register("car")
           .as(Car)
             .withProperties()
-              .func('setEngine');
-      resolver.resolve('car');
+              .func("setEngine");
+      resolver.resolve("car");
       expect(setEngineSpy).toHaveBeenCalled();
     });
 
     it("should invoke func with parameter", function () {
-      var setEngineSpy = jasmine.createSpy('setEngine');
+      var setEngineSpy = jasmine.createSpy("setEngine");
       var Car = function () {};
       Car.prototype.setEngine = setEngineSpy;
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
-        .register('car')
+        .register("car")
           .as(Car)
             .withProperties()
-              .func('setEngine')
-                .param().ref('dieselEngine')
+              .func("setEngine")
+                .param().ref("dieselEngine")
                 .param().val(2000);
-      resolver.resolve('car');
+      resolver.resolve("car");
       expect(setEngineSpy).toHaveBeenCalled();
       if (setEngineSpy.mostRecentCall) {
         expect(setEngineSpy.mostRecentCall.args[0]).not.toBeUndefined();
@@ -959,7 +963,7 @@ describe("Spec", function () {
     it("should throw an exception while invoking the method 'withProperties', if type is not set", function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .withProperties();
       }).toThrow();
     });
@@ -986,7 +990,7 @@ describe("Spec", function () {
     it("should throw an exception, if type is not mapped with name", function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .setFactory(function () {});
       }).toThrow();
     });
@@ -995,7 +999,7 @@ describe("Spec", function () {
       function () {
       expect(function () {
         resolver
-          .register('dieselEngine')
+          .register("dieselEngine")
             .setFactory({});
       }).toThrow();
     });
@@ -1003,10 +1007,10 @@ describe("Spec", function () {
     it("should register passed function to the method 'setFactory' as factory", function () {
       var engine = new DieselEngine();
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
           .setFactory(function () { return engine; });
-      var instance = resolver.resolve('dieselEngine');
+      var instance = resolver.resolve("dieselEngine");
       expect(instance).toBe(engine);
     });
 
@@ -1018,10 +1022,10 @@ describe("Spec", function () {
         }
       };
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
           .setFactory(factory);
-      var instance = resolver.resolve('dieselEngine');
+      var instance = resolver.resolve("dieselEngine");
       expect(instance).toBe(engine);
     });
 
@@ -1039,15 +1043,15 @@ describe("Spec", function () {
     });
 
     it("should check if name is registered", function () {
-      resolver.register('dieselEngine').as(DieselEngine);
-      expect(resolver.contains('dieselEngine')).toBe(true);
+      resolver.register("dieselEngine").as(DieselEngine);
+      expect(resolver.contains("dieselEngine")).toBe(true);
     });
 
     it("should check if name is registered", function () {
       resolver
-        .register('diesel-engine')
+        .register("diesel-engine")
           .as(DieselEngine);
-      expect(resolver.contains('diesel-engine')).toBe(true);
+      expect(resolver.contains("diesel-engine")).toBe(true);
     });
 
     it("should throw an exception if the parameter 'name' is not passed to the method 'resolve'", function () {
@@ -1065,7 +1069,7 @@ describe("Spec", function () {
 
     it("should throw an exception if passed name is not registered", function () {
       expect(function () {
-        resolver.resolve('dieselEngine');
+        resolver.resolve("dieselEngine");
       }).toThrow();
     });
 
@@ -1074,14 +1078,14 @@ describe("Spec", function () {
         .autowired(true)
         .setNameTransformer(function (name) {
           return name.replace(/([A-Z])/g, function (str) {
-            return '-' + str.toLowerCase();
+            return "-" + str.toLowerCase();
           });
         })
-        .register('diesel-engine')
+        .register("diesel-engine")
           .as(DieselEngine)
-        .register('tractor')
+        .register("tractor")
           .as(Tractor);
-      var instance = resolver.resolve('tractor');
+      var instance = resolver.resolve("tractor");
       expect(instance).not.toBeNull();
       expect(instance.dieselEngine).not.toBeNull();
     });
@@ -1090,18 +1094,18 @@ describe("Spec", function () {
       var customNameTransformer = {
         transform: function (name) {
           return name.replace(/([A-Z])/g, function (str) {
-            return '-' + str.toLowerCase();
+            return "-" + str.toLowerCase();
           });
         }
       };
       resolver
         .autowired(true)
         .setNameTransformer(customNameTransformer)
-        .register('diesel-engine')
+        .register("diesel-engine")
           .as(DieselEngine)
-        .register('tractor')
+        .register("tractor")
           .as(Tractor);
-      var instance = resolver.resolve('tractor');
+      var instance = resolver.resolve("tractor");
       expect(instance).not.toBeNull();
       expect(instance.dieselEngine).not.toBeNull();
     });
@@ -1109,9 +1113,9 @@ describe("Spec", function () {
     it("should dispose resolver", function () {
       var callback = jasmine.createSpy();
       var mock = { dispose: callback };
-      resolver.register('dieselEngine').instance(mock);
+      resolver.register("dieselEngine").instance(mock);
       resolver.dispose();
-      expect(resolver.contains('dieselEngine')).toBe(false);
+      expect(resolver.contains("dieselEngine")).toBe(false);
       expect(callback).toHaveBeenCalled();
     });
 
@@ -1146,9 +1150,9 @@ describe("Spec", function () {
       var engine = new DieselEngine();
       resolver
         .setDefaultFactory(function () { return engine; })
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine);
-      var instance = resolver.resolve('dieselEngine');
+      var instance = resolver.resolve("dieselEngine");
       expect(instance).toBe(engine);
     });
 
@@ -1161,26 +1165,26 @@ describe("Spec", function () {
       };
       resolver
         .setDefaultFactory(factory)
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine);
-      var instance = resolver.resolve('dieselEngine');
+      var instance = resolver.resolve("dieselEngine");
       expect(instance).toBe(engine);
     });
 
     it("should throw circular dependency exception", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine)
             .withProperties()
-              .prop('hp').ref('dieselEngine');
+              .prop("hp").ref("dieselEngine");
       expect(function () {
-        resolver.resolve('dieselEngine');
+        resolver.resolve("dieselEngine");
       }).toThrow();
     });
 
     it("should create child container", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine);
       var child = resolver.create();
       expect(child).not.toBeNull();
@@ -1188,23 +1192,23 @@ describe("Spec", function () {
 
     it("should contain inherited registration from the parent", function () {
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .as(DieselEngine);
       var child = resolver.create();
-      expect(child.contains('dieselEngine')).toBe(true);
+      expect(child.contains("dieselEngine")).toBe(true);
     });
 
     it("should override registration from the parent", function () {
       var engine1 = new DieselEngine();
       var engine2 = new DieselEngine();
       resolver
-        .register('dieselEngine')
+        .register("dieselEngine")
           .instance(engine1);
       var child = resolver.create();
       child
-        .register('dieselEngine')
+        .register("dieselEngine")
           .instance(engine2);
-      var instance = child.resolve('dieselEngine');
+      var instance = child.resolve("dieselEngine");
       expect(instance).toBe(engine2);
     });
 
@@ -1216,9 +1220,9 @@ describe("Spec", function () {
       var child = resolver.create();
       child
         .autowired(true)
-        .register('myCustomType')
+        .register("myCustomType")
           .as(MyCustomType);
-      var instance = child.resolve('myCustomType');
+      var instance = child.resolve("myCustomType");
       expect(instance).not.toBeNull();
     });
 

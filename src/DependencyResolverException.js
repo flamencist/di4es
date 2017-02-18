@@ -1,11 +1,11 @@
 var DependencyResolverException = function (message) {
-  this.name = 'DependencyResolverException';
+  this.name = "DependencyResolverException";
   this.stack = null;
   this.message = message || "A dependency resolver exception has occurred.";
   var lines, i, tmp;
-  if ((typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Chrome') !== -1) ||
-    (typeof navigator === 'undefined')) {
-    lines = new Error().stack.split('\n');
+  if ((typeof navigator !== "undefined" && navigator.userAgent.indexOf("Chrome") !== -1) ||
+    (typeof navigator === "undefined")) {
+    lines = new Error().stack.split("\n");
     if (lines && lines.length > 2) {
       tmp = [];
       for (i = 2; i < lines.length; i++) {
@@ -13,25 +13,25 @@ var DependencyResolverException = function (message) {
           tmp.push(lines[i].trim());
         }
       }
-      this.stack = tmp.join('\n');
+      this.stack = tmp.join("\n");
     }
-  } else if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Firefox') !== -1) {
-    lines = new Error().stack.split('\n');
+  } else if (typeof navigator !== "undefined" && navigator.userAgent.indexOf("Firefox") !== -1) {
+    lines = new Error().stack.split("\n");
     if (lines && lines.length > 1) {
       tmp = [];
       for (i = 1; i < lines.length; i++) {
         if (lines[i]) {
-          tmp.push('at ' + lines[i].trim().replace('@', ' (') + ')');
+          tmp.push("at " + lines[i].trim().replace("@", " (") + ")");
         }
       }
-      this.stack = tmp.join('\n');
+      this.stack = tmp.join("\n");
     }
-  } else if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Trident') !== -1) {
+  } else if (typeof navigator !== "undefined" && navigator.userAgent.indexOf("Trident") !== -1) {
     try {
       throw new Error();
     } catch (error) {
-      if ('stack' in error) {
-        lines = error.stack.split('\n');
+      if ("stack" in error) {
+        lines = error.stack.split("\n");
         if (lines && lines.length > 2) {
           tmp = [];
           for (i = 2; i < lines.length; i++) {
@@ -39,63 +39,32 @@ var DependencyResolverException = function (message) {
               tmp.push(lines[i].trim());
             }
           }
-          this.stack = tmp.join('\n');
+          this.stack = tmp.join("\n");
         }
       } else {
-        this.stack = '';
+        this.stack = "";
       }
     }
   } else {
     var error = new Error();
-    if ('stack' in error) {
+    if ("stack" in error) {
       this.stack = error.stack;
     } else {
-      this.stack = '';
+      this.stack = "";
     }
   }
-  Object.defineProperty(this, 'name', { enumerable: true });
-  Object.defineProperty(this, 'message', { enumerable: true });
-  Object.defineProperty(this, 'stack', { enumerable: true });
+  Object.defineProperty(this, "name", { enumerable: true });
+  Object.defineProperty(this, "message", { enumerable: true });
+  Object.defineProperty(this, "stack", { enumerable: true });
   Object.seal(this);
 };
 
 DependencyResolverException.prototype = Object.create(Object.prototype, {
-
-/*  name: {
-    get: function () {
-      return this.__name;
-    },
-    set: function (value) {
-      this.__name = value;
-    },
-    enumerable: true
-  },
-
-  message: {
-    get: function () {
-      return this.__message;
-    },
-    set: function (value) {
-      this.__message = value;
-    },
-    enumerable: true
-  },
-
-  stack: {
-    get: function () {
-      return this.__stack;
-    },
-    set: function (value) {
-      this.__stack = value;
-    },
-    enumerable: true
-  },
-*/
   toString: {
     value: function () {
-      var msg = this.name + ': ' + this.message;
+      var msg = this.name + ": " + this.message;
       if (this.stack) {
-        msg += '\n\t' + this.stack.replace(/\n/g, '\n\t');
+        msg += "\n\t" + this.stack.replace(/\n/g, "\n\t");
       }
       return msg;
     },

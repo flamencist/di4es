@@ -1,13 +1,14 @@
+
 var IInstanceFactory = Object.create(Object.prototype, {
 
   create: {
-    value: function (options) {},
+    value: function (options) {}, //eslint-disable-line no-unused-vars
     enumerable: true
   },
 
   toString: {
     value: function () {
-      return '[object IInstanceFactory]';
+      return "[object IInstanceFactory]";
     },
     enumerable: true
   }

@@ -1,3 +1,4 @@
+/* global DependencyResolverException, InstanceFactory, NameTransformer, InstanceFactoryOptions, debug, index, args */
 var DependencyResolver = function (parent) {
   this.__parent = parent;
   this.__defaultFactory = null;
@@ -13,17 +14,17 @@ var DependencyResolver = function (parent) {
   if (parent) {
     this.__autowired = parent.isAutowired();
   }
-  Object.defineProperty(this, '__parent', { enumerable: false });
-  Object.defineProperty(this, '__defaultFactory', { enumerable: false });
-  Object.defineProperty(this, '__nameTransformer', { enumerable: false });
-  Object.defineProperty(this, '__autowired', { enumerable: false });
-  Object.defineProperty(this, '__container', { enumerable: false });
-  Object.defineProperty(this, '__registration', { enumerable: false });
-  Object.defineProperty(this, '__withProperties', { enumerable: false });
-  Object.defineProperty(this, '__withConstructor', { enumerable: false });
-  Object.defineProperty(this, '__parameter', { enumerable: false });
-  Object.defineProperty(this, '__property', { enumerable: false });
-  Object.defineProperty(this, '__function', { enumerable: false });
+  Object.defineProperty(this, "__parent", { enumerable: false });
+  Object.defineProperty(this, "__defaultFactory", { enumerable: false });
+  Object.defineProperty(this, "__nameTransformer", { enumerable: false });
+  Object.defineProperty(this, "__autowired", { enumerable: false });
+  Object.defineProperty(this, "__container", { enumerable: false });
+  Object.defineProperty(this, "__registration", { enumerable: false });
+  Object.defineProperty(this, "__withProperties", { enumerable: false });
+  Object.defineProperty(this, "__withConstructor", { enumerable: false });
+  Object.defineProperty(this, "__parameter", { enumerable: false });
+  Object.defineProperty(this, "__property", { enumerable: false });
+  Object.defineProperty(this, "__function", { enumerable: false });
   Object.seal(this);
 };
 
@@ -41,9 +42,9 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
       if (value === undefined || value === null) {
         value = true;
       }
-      if (typeof value !== 'boolean') {
-        throw new DependencyResolverException("Parameter 'value' passed to the method 'autowired' has to " +
-          "be a 'boolean'");
+      if (typeof value !== "boolean") {
+        throw new DependencyResolverException("Parameter \"value\" passed to the method \"autowired\" has to " +
+          "be a \"boolean\"");
       }
       this.__autowired = value;
       return this;
@@ -54,11 +55,11 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   register: {
     value: function (name) {
       if (!name) {
-        throw new DependencyResolverException("Parameter 'name' is not passed to the method 'register'");
+        throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"register\"");
       }
-      if (typeof name !== 'string') {
-        throw new DependencyResolverException("Parameter 'name' passed to the method 'register' has to be " +
-          "a 'string'");
+      if (typeof name !== "string") {
+        throw new DependencyResolverException("Parameter \"name\" passed to the method \"register\" has to be " +
+          "a \"string\"");
       }
       if (!this.__container) {
         this.__container = Object.create(null);
@@ -94,12 +95,12 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!type) {
-        throw new DependencyResolverException("Parameter 'type' is not passed to the method 'as' for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Parameter \"type\" is not passed to the method \"as\" for " +
+          "registration \"" + this.__registration.name + "\"");
       }
-      if (typeof type !== 'function') {
-        throw new DependencyResolverException("Parameter 'type' passed to the method 'as' has to be a 'function' " +
-          "for registration '" + this.__registration.name + "'");
+      if (typeof type !== "function") {
+        throw new DependencyResolverException("Parameter \"type\" passed to the method \"as\" has to be a \"function\" " +
+          "for registration \"" + this.__registration.name + "\"");
       }
       this.__registration.instance = null;
       this.__registration.type = type;
@@ -125,8 +126,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (instance === null || instance === undefined) {
-        throw new DependencyResolverException("Parameter 'instance' is not passed to the method 'instance' for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Parameter \"instance\" is not passed to the method \"instance\" for " +
+          "registration \"" + this.__registration.name + "\"");
       }
       this.__registration.instance = instance;
       this.__registration.type = null;
@@ -149,8 +150,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" +
-          this.__registration.name + "'");
+        throw new DependencyResolverException("Type is not set for registration \"" +
+          this.__registration.name + "\"");
       }
       this.__registration.singleton = true;
       this.__withConstructor = false;
@@ -169,8 +170,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" +
-          this.__registration.name + "'");
+        throw new DependencyResolverException("Type is not set for registration \"" +
+          this.__registration.name + "\"");
       }
       this.__withConstructor = true;
       this.__withProperties = false;
@@ -188,7 +189,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
       }
       var parameters = null,
           parameter = null,
@@ -196,8 +197,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
       if (this.__withConstructor) {
         parameters = this.__registration.dependencies.parameters;
         if (this.__autowired && (name === undefined || name === null)) {
-          throw new DependencyResolverException("Parameter 'name' has to be passed to the method, when dependency " +
-            "container has option 'autowired' enabled");
+          throw new DependencyResolverException("Parameter \"name\" has to be passed to the method, when dependency " +
+            "container has option \"autowired\" enabled");
         }
         parameter = this.__findParameter(name, parameters, this.__registration);
       } else if (this.__withProperties) {
@@ -207,8 +208,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         parameters = this.__function.parameters;
         parameter = this.__findParameter(name, this.__function.parameters, this.__registration);
       } else {
-        throw new DependencyResolverException("Invocation of method 'withConstructor' or 'withProperties' " + 
-          "is missing for registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Invocation of method \"withConstructor\" or \"withProperties\" " +
+          "is missing for registration \"" + this.__registration.name + "\"");
       }
       if (!parameter) {
         parameter = {
@@ -232,7 +233,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
       }
       this.__withProperties = true;
       this.__withConstructor = false;
@@ -250,19 +251,19 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!name) {
-        throw new DependencyResolverException("Parameter 'name' is not passed to the method 'prop' for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"prop\" for " +
+          "registration \"" + this.__registration.name + "\"");
       }
-      if (typeof name !== 'string') {
-        throw new DependencyResolverException("Parameter 'name' passed to the method 'prop' has to be" +
-          " a 'string' for registration '" + this.__registration.name + "'");
+      if (typeof name !== "string") {
+        throw new DependencyResolverException("Parameter \"name\" passed to the method \"prop\" has to be" +
+          " a \"string\" for registration \"" + this.__registration.name + "\"");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
       }
       if (!this.__withProperties) {
-        throw new DependencyResolverException("Invocation of method 'withProperties' is missing for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Invocation of method \"withProperties\" is missing for " +
+          "registration \"" + this.__registration.name + "\"");
       }
       var properties = this.__registration.dependencies.properties,
           property = null;
@@ -294,19 +295,19 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!name) {
-        throw new DependencyResolverException("Parameter 'name' is not passed to the method 'func' for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"func\" for " +
+          "registration \"" + this.__registration.name + "\"");
       }
-      if (typeof name !== 'string') {
-        throw new DependencyResolverException("Parameter 'name' passed to the method 'func' has to be" +
-          " a 'string' for registration '" + this.__registration.name + "'");
+      if (typeof name !== "string") {
+        throw new DependencyResolverException("Parameter \"name\" passed to the method \"func\" has to be" +
+          " a \"string\" for registration \"" + this.__registration.name + "\"");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name + "\"");
       }
       if (!this.__withProperties) {
-        throw new DependencyResolverException("Invocation of method 'withProperties' is missing for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Invocation of method \"withProperties\" is missing for " +
+          "registration \"" + this.__registration.name + "\"");
       }
       var functions = this.__registration.dependencies.functions,
           func = null;
@@ -337,10 +338,10 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (instance === null || instance === undefined) {
-        throw new DependencyResolverException("Parameter 'instance' is not passed to the method 'val'");
+        throw new DependencyResolverException("Parameter \"instance\" is not passed to the method \"val\"");
       }
       if (!this.__withProperties && !this.__withConstructor) {
-        throw new DependencyResolverException("Invocation of method withConstructor' or 'withProperties' " +
+        throw new DependencyResolverException("Invocation of method withConstructor\" or \"withProperties\" " +
           "is missing");
       }
       if (this.__withConstructor && !this.__parameter) {
@@ -367,16 +368,16 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!name) {
-        throw new DependencyResolverException("Parameter 'name' is not passed to the method 'ref' for " +
-          "registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"ref\" for " +
+          "registration \"" + this.__registration.name + "\"");
       }
-      if (typeof name !== 'string') {
-        throw new DependencyResolverException("Parameter 'name' passed to the method 'ref' has to " +
-          "be a 'string' for registration '" + this.__registration.name + "'");
+      if (typeof name !== "string") {
+        throw new DependencyResolverException("Parameter \"name\" passed to the method \"ref\" has to " +
+          "be a \"string\" for registration \"" + this.__registration.name + "\"");
       }
       if (!this.__withProperties && !this.__withConstructor) {
-        throw new DependencyResolverException("Invocation of method 'withConstructor' or 'withProperties' " +
-          "is missing for registration '" + this.__registration.name + "'");
+        throw new DependencyResolverException("Invocation of method \"withConstructor\" or \"withProperties\" " +
+          "is missing for registration \"" + this.__registration.name + "\"");
       }
       if (this.__withConstructor && !this.__parameter) {
         throw new DependencyResolverException("Parameter is not defined");
@@ -385,7 +386,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Parameter or property is not defined");
       }
       if (!this.contains(name)) {
-        throw new DependencyResolverException("Type or instance is not registered with name '" + name + "'");
+        throw new DependencyResolverException("Type or instance is not registered with name \"" + name + "\"");
       }
       if (this.__parameter) {
         this.__parameter.value = undefined;
@@ -405,18 +406,18 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         throw new DependencyResolverException("Registration's name is not defined");
       }
       if (!factory) {
-        throw new DependencyResolverException("Parameter 'factory' is not passed to the method 'setFactory");
+        throw new DependencyResolverException("Parameter \"factory\" is not passed to the method \"setFactory\"");
       }
-      if (typeof factory !== 'function' && typeof factory !== 'object') {
-        throw new DependencyResolverException("Parameter 'factory' passed to the method 'setFactory' has to be " +
-          "a 'function' or 'object'");
+      if (typeof factory !== "function" && typeof factory !== "object") {
+        throw new DependencyResolverException("Parameter \"factory\" passed to the method \"setFactory\" has to be " +
+          "a \"function\" or \"object\"");
       }
-      if (typeof factory === 'object' && !('create' in factory)) {
-        throw new DependencyResolverException("Factory's instance passed to the method 'setFactory' has to have " +
-          "a method 'create'");
+      if (typeof factory === "object" && !("create" in factory)) {
+        throw new DependencyResolverException("Factory's instance passed to the method \"setFactory\" has to have " +
+          "a method \"create\"");
       }
       if (!this.__registration.type) {
-        throw new DependencyResolverException("Type is not set for registration '" + this.__registration.name);
+        throw new DependencyResolverException("Type is not set for registration \"" + this.__registration.name);
       }
       this.__registration.factory = factory;
       this.__withConstructor = false;
@@ -439,40 +440,40 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   inject: {
     value: function (func) {
       if (!func) {
-        throw new DependencyResolverException("Parameter 'func' is not passed to method 'inject'");
+        throw new DependencyResolverException("Parameter \"func\" is not passed to method \"inject\"");
       }
       var i,
           parameters = [],
           context = { resolving: [] };
       if (func instanceof Array) {
         if (func.length === 0) {
-          throw new DependencyResolverException("The array passed to the method 'inject' can't be empty");
+          throw new DependencyResolverException("The array passed to the method \"inject\" can't be empty");
         }
         for (i = 0; i < func.length - 1; i++) {
           parameters.push(func[i]);
         }
         func = func[func.length - 1];
-        if (typeof func !== 'function') {
-          throw new DependencyResolverException("The last item of the array passed to the method 'inject' has " +
-            "to be a 'function'");
+        if (typeof func !== "function") {
+          throw new DependencyResolverException("The last item of the array passed to the method \"inject\" has " +
+            "to be a \"function\"");
         }
         for (i = 0; i < parameters.length; i++) {
-          if (typeof parameters[i] === 'string' && this.contains(parameters[i])) {
+          if (typeof parameters[i] === "string" && this.contains(parameters[i])) {
             parameters[i] = this.__resolve(parameters[i], context);
           }
         }
         func.apply(null, parameters);
       } else {
         var registration = null;
-        if (arguments.length === 2 && typeof arguments[1] === 'string') {
+        if (arguments.length === 2 && typeof arguments[1] === "string") {
           var name = arguments[1];
           if (!this.contains(name)) {
-            throw new DependencyResolverException("Type with name '" + name + "' is not registered");
+            throw new DependencyResolverException("Type with name \"" + name + "\" is not registered");
           }
           registration = this.getRegistration(name);
         }
         var dependencyName;
-        if (typeof func === 'function') {
+        if (typeof func === "function") {
           if (registration) {
             parameters = this.__getConstructorParameters(registration, context);
           } else {
@@ -487,12 +488,12 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             }
           }
           func.apply(null, parameters);
-        } else if (typeof func === 'object') {
+        } else if (typeof func === "object") {
           if (registration) {
             this.__setProperties(func, registration, context);
             this.__invokeFunctions(func, registration, context);
           } else {
-            for (var propertyName in func) {
+            for (var propertyName in func) {//eslint-disable-line guard-for-in
               dependencyName = this.__resolveDependencyName(propertyName);
               if (this.contains(dependencyName)) {
                 parameters.push({
@@ -508,7 +509,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             }
           }
         } else {
-          throw new DependencyResolverException("Invalid parameter has been passed to the method 'inject'");
+          throw new DependencyResolverException("Invalid parameter has been passed to the method \"inject\"");
         }
       }
       return this;
@@ -519,10 +520,10 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   contains: {
     value: function (name) {
       if (!name) {
-        throw new DependencyResolverException("Parameter 'name' is not passed to the method 'contains'");
+        throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"contains\"");
       }
-      if (typeof name !== 'string') {
-        throw new DependencyResolverException("Parameter 'name' passed to the  has to be a 'string'");
+      if (typeof name !== "string") {
+        throw new DependencyResolverException("Parameter \"name\" passed to the  has to be a \"string\"");
       }
       var has = false;
       if (this.__container) {
@@ -531,8 +532,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         }
       }
       if (!has && this.__parent) {
-        if (!('contains' in this.__parent)) {
-          throw new DependencyResolverException("Dependency resolver's parent doesn't have a method 'contains'");
+        if (!("contains" in this.__parent)) {
+          throw new DependencyResolverException("Dependency resolver's parent doesn't have a method \"contains\"");
         }
         has = this.__parent.contains(name);
       }
@@ -556,9 +557,9 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
       if (this.__defaultFactory) {
         factory = this.__defaultFactory;
       } else if (this.__parent) {
-        if (!('getDefaultFactory' in this.__parent)) {
+        if (!("getDefaultFactory" in this.__parent)) {
           throw new DependencyResolverException("Dependency resolver's parent doesn't have a " +
-            "method 'getDefaultFactory'");
+            "method \"getDefaultFactory\"");
         }
         factory = this.__parent.getDefaultFactory();
       } else {
@@ -572,16 +573,16 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   setDefaultFactory: {
     value: function (factory) {
       if (!factory) {
-        throw new DependencyResolverException("Parameter 'factory' is not passed to the method " +
-          "'setDefaultFactory");
+        throw new DependencyResolverException("Parameter \"factory\" is not passed to the method " +
+          "\"setDefaultFactory\"");
       }
-      if (typeof factory !== 'function' && typeof factory !== 'object') {
-        throw new DependencyResolverException("Parameter 'factory' passed to the method 'setDefaultFactory' has " +
-          " to be a 'function' or 'object'");
+      if (typeof factory !== "function" && typeof factory !== "object") {
+        throw new DependencyResolverException("Parameter \"factory\" passed to the method \"setDefaultFactory\" has " +
+          " to be a \"function\" or \"object\"");
       }
-      if (typeof factory === 'object' && !('create' in factory)) {
-        throw new DependencyResolverException("Factory's instance passed to the method 'setDefaultFactory' has " +
-          "to have a method 'create'");
+      if (typeof factory === "object" && !("create" in factory)) {
+        throw new DependencyResolverException("Factory's instance passed to the method \"setDefaultFactory\" has " +
+          "to have a method \"create\"");
       }
       this.__defaultFactory = factory;
       return this;
@@ -595,9 +596,9 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
       if (this.__nameTransformer) {
         transformer = this.__nameTransformer;
       } else if (this.__parent) {
-        if (!('getNameTransformer' in this.__parent)) {
+        if (!("getNameTransformer" in this.__parent)) {
           throw new DependencyResolverException("Dependency resolver's parent doesn't have a " +
-            "method 'getNameTransformer'");
+            "method \"getNameTransformer\"");
         }
         transformer = this.__parent.getNameTransformer();
       } else {
@@ -611,16 +612,16 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   setNameTransformer: {
     value: function (transformer) {
       if (!transformer) {
-        throw new DependencyResolverException("Parameter 'transformer' is not passed to the method " +
-          "'setNameTransformer'");
+        throw new DependencyResolverException("Parameter \"transformer\" is not passed to the method " +
+          "\"setNameTransformer\"");
       }
-      if (typeof transformer !== 'function' && typeof transformer !== 'object') {
-        throw new DependencyResolverException("Parameter 'transformer' passed to the method 'setNameTransformer' " +
-          "has to be a 'function' or 'object'");
+      if (typeof transformer !== "function" && typeof transformer !== "object") {
+        throw new DependencyResolverException("Parameter \"transformer\" passed to the method \"setNameTransformer\" " +
+          "has to be a \"function\" or \"object\"");
       }
-      if (typeof transformer === 'object' && !('transform' in transformer)) {
-        throw new DependencyResolverException("Trabsformers's instance passed to the method 'setNameTransformer' " +
-          "has to have a method 'transform'");
+      if (typeof transformer === "object" && !("transform" in transformer)) {
+        throw new DependencyResolverException("Trabsformers's instance passed to the method \"setNameTransformer\" " +
+          "has to have a method \"transform\"");
       }
       this.__nameTransformer = transformer;
       return this;
@@ -634,9 +635,9 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
       if (this.__container && name in this.__container) {
         registration = this.__container[name];
       } else if (this.__parent) {
-        if (!('getRegistration' in this.__parent)) {
-          throw new DependencyResolverException("Dependency resolver's parent doesn't have a " +
-            "method 'getRegistration'");
+        if (!("getRegistration" in this.__parent)) {
+          throw new DependencyResolverException("Dependency resolver\"s parent doesn't have a " +
+            "method \"getRegistration\"");
         }
         registration = this.__parent.getRegistration(name);
       }
@@ -653,7 +654,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         for (var name in this.__container) {
           if (!(this.__container[name] instanceof Array)) {
             registration = this.__container[name];
-            if (registration.instance && ('dispose' in registration.instance)) {
+            if (registration.instance && ("dispose" in registration.instance)) {
               registration.instance.dispose();
             }
             registration.instance = null;
@@ -662,7 +663,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             var registrations = this.__container[name];
             for (i = 0; i < registrations.length; i++) {
               registration = registrations[i];
-              if (registration.instance && ('dispose' in registration.instance)) {
+              if (registration.instance && ("dispose" in registration.instance)) {
                 registration.instance.dispose();
               }
               registration.instance = null;
@@ -688,25 +689,24 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
 
   toString: {
     value: function () {
-      return '[object DependencyResolver]';
+      return "[object DependencyResolver]";
     },
     enumerable: true
   },
 
   __getFunctionArguments: {
     value: function (func) {
-      if (func && typeof func === 'function' && 'toString' in func) {
+      if (func && typeof func === "function" && "toString" in func) {
         var str = null;
-        var result = func
-          .toString()
+        var result = _.function_toString.call(func)
           .match(/^[\s\(]*function[^(]*\(([^)]*)\)/);
         if (result && result.length > 1) {
           str = result[1]
-            .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
-            .replace(/\s+/g, '');
+            .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, "")
+            .replace(/\s+/g, "");
         }
         if (str) {
-          return str.split(',');
+          return str.split(",");
         }
       }
       return [];
@@ -716,25 +716,25 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   __resolve: {
     value: function (name, context) {
       if (!name) {
-        throw new DependencyResolverException("Parameter 'name' is not passed to the method 'resolve'");
+        throw new DependencyResolverException("Parameter \"name\" is not passed to the method \"resolve\"");
       }
-      if (typeof name !== 'string') {
-        throw new DependencyResolverException("Parameter 'name' passed to the method 'resolve' has to be " +
-          "a 'string'");
+      if (typeof name !== "string") {
+        throw new DependencyResolverException("Parameter \"name\" passed to the method \"resolve\" has to be " +
+          "a \"string\"");
       }
-      if (debug && console && 'log' in console) {
-        var message = "-> '" + name + "'";
+      if (debug && console && "log" in console) {
+        var message = "-> \"" + name + "\"";
         for (var j = 0; j < context.resolving.length; j++) {
           message = "  " + message;
         }
         console.log(message);
       }
       if (!this.contains(name)) {
-        throw new DependencyResolverException("Type or instance with name '" + name + "' is not registered");
+        throw new DependencyResolverException("Type or instance with name \"" + name + "\" is not registered");
       }
       var index = _.indexOf(context.resolving, name);
       if (index !== -1) {
-        throw new DependencyResolverException("Can not resolve circular dependency '" + name + "'");
+        throw new DependencyResolverException("Can not resolve circular dependency \"" + name + "\"");
       }
       context.resolving.push(name);
       var instance = null,
@@ -768,7 +768,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
           registration.instance = instance;
         }
         if (!instance) {
-          throw new DependencyResolverException("Failed to resolve instance by name '" + registration.name + "'");
+          throw new DependencyResolverException("Failed to resolve instance by name \"" + registration.name + "\"");
         }
       }
       return instance;
@@ -778,7 +778,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
   __resolveDependencyName: {
     value: function (name) {
       var transform = this.getNameTransformer();
-      if (typeof transform === 'function') {
+      if (typeof transform === "function") {
         name = transform(name);
       } else {
         name = transform.transform(name);
@@ -792,7 +792,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
 
   __createInstance: {
     value: function (registration, context) {
-      var i,
+      var i,//eslint-disable-line no-unused-vars
           instance;
       var parameters = this.__getConstructorParameters(registration, context);
       var options = new InstanceFactoryOptions({
@@ -807,7 +807,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         factory = this.getDefaultFactory();
       }
       if (factory) {
-        if (typeof factory === 'function') {
+        if (typeof factory === "function") {
           instance = factory.call(null, options);
         } else {
           instance = factory.create(options);
@@ -857,8 +857,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             }
             index = _.indexOf(args, parameter.name);
             if (index === -1) {
-              throw new DependencyResolverException("Constructor in registration '" + registration.name +
-                "' doesn't have defined parameter '" + parameter.name + "'");
+              throw new DependencyResolverException("Constructor in registration \"" + registration.name +
+                "\" doesn't have defined parameter \"" + parameter.name + "\"");
             }
             parameters[index] = value;
           } else {
@@ -891,17 +891,17 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
     value: function (name, parameters, registration) {
       var parameter = null;
       if (name !== null && name !== undefined && registration !== null) {
-        if (typeof name === 'number') {
+        if (typeof name === "number") {
           index = name;
           name = undefined;
           if (index < 0) {
-            throw new DependencyResolverException("Parameter 'name' passed to the method 'param' is out of " +
-              "range for registration '" + registration.name + "'");
+            throw new DependencyResolverException("Parameter \"name\" passed to the method \"param\" is out of " +
+              "range for registration \"" + registration.name + "\"");
           }
           if (index < parameters.length) {
             parameter = parameters[index];
           }
-        } else if (typeof name === 'string') {
+        } else if (typeof name === "string") {
           for (var i = 0; i < parameters.length; i++) {
             if (parameters[i].name === name) {
               parameter = parameters[i];
@@ -909,8 +909,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             }
           }
         } else {
-          throw new DependencyResolverException("Parameter 'name' passed to the method 'param' has to " +
-            "be a 'number' or a 'string' for registration '" + registration.name + "'");
+          throw new DependencyResolverException("Parameter \"name\" passed to the method \"param\" has to " +
+            "be a \"number\" or a \"string\" for registration \"" + registration.name + "\"");
         }
       }
       return parameter;
@@ -921,7 +921,7 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
     value: function (instance, registration, context) {
       if (registration.dependencies) {
         if (this.__autowired) {
-          for (var propertyName in instance) {
+          for (var propertyName in instance) {//eslint-disable-line guard-for-in
             var dependencyName = this.__resolveDependencyName(propertyName);
             if (!this.__hasProperty(registration, propertyName) && this.contains(dependencyName)) {
               instance[propertyName] = this.__resolve(dependencyName, context);
@@ -931,8 +931,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         for (var i = 0; i < registration.dependencies.properties.length; i++) {
           var property = registration.dependencies.properties[i];
           if (!(property.name in instance)) {
-            throw new DependencyResolverException("Resolved object '" + registration.name + 
-              "' doesn't have property '" + property.name + "'");
+            throw new DependencyResolverException("Resolved object \"" + registration.name +
+              "\" doesn't have property \"" + property.name + "\"");
           }
           if (property.value !== undefined) {
             instance[property.name] = property.value;
@@ -954,8 +954,8 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
         for (i = 0; i < registration.dependencies.functions.length; i++) {
           var func = registration.dependencies.functions[i];
           if (!(func.name in instance)) {
-            throw new DependencyResolverException("Resolved object '" + registration.name + 
-              "' doesn't have function '" + func.name + "'");
+            throw new DependencyResolverException("Resolved object \"" + registration.name +
+              "\" doesn't have function \"" + func.name + "\"");
           }
           var parameters = [];
           for (j = 0; j < func.parameters.length; j++) {
@@ -971,12 +971,12 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
               parameters[parameter.index] = value;
             } else if (parameter.name) {
               if (!args) {
-                args = this.__getFunctionArguments(instance[func.name]);
+                args = this.__getFunctionArguments(instance[func.name]);//eslint-disable-line
               }
               index = _.indexOf(args, parameter.name);
               if (index === -1) {
-                throw new DependencyResolverException("Function doesn't have defined parameter '" + 
-                  parameter.name + "'");
+                throw new DependencyResolverException("Function doesn't have defined parameter \"" +
+                  parameter.name + "\"");
               }
               parameters[index] = value;
             } else {

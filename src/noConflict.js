@@ -9,9 +9,3 @@ exports.noConflict = function () {
 
     return exports;
 };
-
-/*if (typeof define === "function" && define.amd) {
-    define(function () { return exports; });
-} else {
-    window.di = exports;
-}*/
