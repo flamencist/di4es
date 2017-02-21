@@ -4,10 +4,12 @@
 [![devDependency Status](https://david-dm.org/flamencist/di4es/dev-status.svg)](https://david-dm.org/flamencist/di4es#info=devDependencie)
 [![Build Status](https://secure.travis-ci.org/flamencist/di4es.svg)](http://travis-ci.org/flamencist/di4es)
 
-This repository is second version of [di4js](https://david-dm.org/gedbac/di4js/).  
-Added support for old IE (IE5+) browsers. 
-Added support for es6.
-Getters and setters changed to functions.
+This repository is second version of [di4js](https://david-dm.org/gedbac/di4js/). 
+ 
+- Added support for old IE (IE5+) browsers. 
+- Added support for es6.
+- Getters and setters changed to functions.
+- Added support for js compression.
 
 The __di4es__ module is dependency injection implementation in JavaScript.
 Dependency injection is a software design pattern that allows the removal of
