@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0 (2017-02-21)
+
+- added $inject for js compression
+
 ## 2.0.0 (2017-02-18)
 
 - added support for old browsers (IE5+)

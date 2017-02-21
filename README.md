@@ -85,6 +85,7 @@ with __web browsers__ or with __node.js__.
 	* [dispose()](#didispose)
 	* [version](#diversion)
 	* [noConflict()](#dinoconflict)
+	* [$inject (minification)](#di$inject)
 * [License](#license)
 * [Authors](#authors)
 
@@ -546,6 +547,27 @@ If for some reason two versions of di4es are loaded (which is not recommended), 
 from the second version will return the globally scoped di4es variables to those of the first version. Worked for browser version only.
 
 	var secondDi = window.di.noConflict(); // window.di === firstDi
+
+### $inject
+
+Use $inject for prevent compression problem:
+
+    function Engine(){
+    
+    }
+    
+    function Car(engine){
+    
+    }
+    
+    Car.$inject = ["engine"]; //set dependencies names
+    
+    di
+        .autowired(true)
+        .register("engine").as(Engine)
+        .register("car").as(Car);
+        
+    var car = di.resolve("car");
 
 ## Tests
 
