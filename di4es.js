@@ -1132,6 +1132,9 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	                 properties: [],
 	                 functions: []
 	             };
+	             if(type.$inject && type.$inject instanceof Array){
+	                 this.__registration.dependencies.$inject = type.$inject;
+	             }
 	             this.__withConstructor = false;
 	             this.__withProperties = false;
 	             this.__parameter = null;
@@ -1642,7 +1645,7 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	                     "has to be a \"function\" or \"object\"");
 	             }
 	             if (typeof transformer === "object" && !("transform" in transformer)) {
-	                 throw new DependencyResolverException("Trabsformers's instance passed to the method \"setNameTransformer\" " +
+	                 throw new DependencyResolverException("Transformers's instance passed to the method \"setNameTransformer\" " +
 	                     "has to have a method \"transform\"");
 	             }
 	             this.__nameTransformer = transformer;
@@ -1880,6 +1883,13 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	                 if (this.__autowired) {
 	                     args = this.__isClass(registration.type) ?
 	                         this.__getClassConstructorArguments(registration.type) : this.__getFunctionArguments(registration.type);
+	                     if(registration.dependencies.$inject){
+	                         if(registration.dependencies.$inject.length !== args.length){
+	                             throw new DependencyResolverException("Constructor in registration \"" + registration.name +
+	                                 "\" have $inject property with wrong arguments length.");
+	                         }
+	                         args = registration.dependencies.$inject;
+	                     }
 	                     var dependencyName;
 	                     for (i = 0; i < args.length; i++) {
 	                         dependencyName = this.__resolveDependencyName(args[i]);
