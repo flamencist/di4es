@@ -6,7 +6,7 @@
   "authors": [
     "Alexander Chermyanin <flamencist@mail.ru>"
   ],
-  "description": "The di4es module is dependency injection implementation in JavaScript. Dependency injection is a software design pattern that allows the removal of hard-coded dependencies and makes it possible to change them. With support IE5+ browsers and es6.",
+  "description": "The di4es module is dependency injection implementation in JavaScript. ",
   "keywords": [
     "di",
     "dependency",
