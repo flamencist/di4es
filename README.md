@@ -113,6 +113,10 @@ __Server-side platforms__
 To install __di4es__ module for Node.js, this command should be used:
 
 	npm install di4es
+	
+Or [yarn](https://yarnpkg.com/lang/en/):
+
+    yarn add di4es
 
 Also __di4es__ module's loading statement should be added to main module:
 
