@@ -1,7 +1,7 @@
 "use strict";
 
 if (typeof require !== "undefined") {
-    var di = require("../lib/di4es.js");
+    var  di = require("../lib/di4es.js");
 }
 
 

@@ -22,8 +22,14 @@ InstanceFactory.prototype = Object.create(Object.prototype, {
       }
       var instance = null;
       if (options.parameters && options.parameters.length > 0) {
-        var ClassType = Function.bind.apply(options.type,[null].concat(options.parameters));
-        instance = new ClassType();
+        if(Function.prototype.bind){ // ES5
+          var ClassType = Function.bind.apply(options.type,[null].concat(options.parameters));
+          instance = new ClassType();
+        } else{ //ES3
+          instance = Object.create(options.type.prototype);
+          options.type.apply(instance, options.parameters);
+        }
+
       } else {
         instance = new options.type();
       }

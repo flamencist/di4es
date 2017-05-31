@@ -815,8 +815,14 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	       }
 	       var instance = null;
 	       if (options.parameters && options.parameters.length > 0) {
-	         var ClassType = Function.bind.apply(options.type,[null].concat(options.parameters));
-	         instance = new ClassType();
+	         if(Function.prototype.bind){ // ES5
+	           var ClassType = Function.bind.apply(options.type,[null].concat(options.parameters));
+	           instance = new ClassType();
+	         } else{ //ES3
+	           instance = Object.create(options.type.prototype);
+	           options.type.apply(instance, options.parameters);
+	         }
+	 
 	       } else {
 	         instance = new options.type();
 	       }
@@ -1982,6 +1988,9 @@ shim.object.isExtensible = Object.isExtensible && isFuncNative(Object.isExtensib
 	             if (registration.dependencies) {
 	                 if (this.__autowired) {
 	                     for (var propertyName in instance) {//eslint-disable-line guard-for-in
+	                         if (propertyName === "__proto__") {
+	                             continue;
+	                         }
 	                         var dependencyName = this.__resolveDependencyName(propertyName);
 	                         if (!this.__hasProperty(registration, propertyName) && this.contains(dependencyName)) {
 	                             instance[propertyName] = this.__resolve(dependencyName, context);

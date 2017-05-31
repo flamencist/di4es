@@ -960,6 +960,9 @@ DependencyResolver.prototype = Object.create(Object.prototype, {
             if (registration.dependencies) {
                 if (this.__autowired) {
                     for (var propertyName in instance) {//eslint-disable-line guard-for-in
+                        if (propertyName === "__proto__") {
+                            continue;
+                        }
                         var dependencyName = this.__resolveDependencyName(propertyName);
                         if (!this.__hasProperty(registration, propertyName) && this.contains(dependencyName)) {
                             instance[propertyName] = this.__resolve(dependencyName, context);
