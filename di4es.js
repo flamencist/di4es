@@ -1,4 +1,4 @@
-/* di4js (ver. 2.1.0). https://github.com/flamencist/di4es */
+/* di4js (ver. 2.1.2). https://github.com/flamencist/di4es */
 
 (function () {
 
@@ -7,7 +7,7 @@
   var exports = {};
 
   if (!("version" in exports)) {
-    exports.version = "2.1.0";
+    exports.version = "2.1.2";
   }
 
   //http://stackoverflow.com/questions/6598945/detect-if-function-is-native-to-browser
