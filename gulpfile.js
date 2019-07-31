@@ -102,13 +102,13 @@ gulp.task("concat:node-lib", function () {
         .pipe(gulp.dest("./lib/"))
 });
 gulp.task("spec", function (done) {
-    return new Server({
+    new Server({
         configFile: __dirname + "/karma.conf.js",
         singleRun: true
     }, done).start();
 });
 gulp.task("spec-min", function (done) {
-    return new Server({
+    new Server({
         configFile: __dirname + "/karma-min.conf.js",
         singleRun: true
     }, done).start();
@@ -135,10 +135,12 @@ gulp.task("uglify", function () {
         }))
         .pipe(gulp.dest("./"));
 });
-gulp.task("default",gulpSync.sync([
-    ["eslint:src","eslint:spec"],
-    ["clean:browser-lib","clean:node-lib"],
-    ["concat:browser-lib","concat:node-lib"],
-    "uglify",
-    ["spec","spec-min","spec-node"]
-]));
+gulp.task("default",function(){
+    return gulpSync.sync([
+        ["eslint:src","eslint:spec"],
+        ["clean:browser-lib","clean:node-lib"],
+        ["concat:browser-lib","concat:node-lib"],
+        "uglify",
+        ["spec","spec-min","spec-node"]
+    ]);
+});
